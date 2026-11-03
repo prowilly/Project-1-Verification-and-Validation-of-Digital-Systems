@@ -1,0 +1,11 @@
+# Python generated files
+__pycache__/
+*.pyc
+
+# Cocotb and simulation outputs
+sim_build/
+results.xml
+
+# Waveforms
+*.vcd
+*.fst
