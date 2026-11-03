@@ -5,11 +5,11 @@
 TOPLEVEL_LANG ?= verilog
 SIM           ?= verilator
 
-DUT ?= $(CURDIR)/../../dut/fifo.sv
+DUT ?= $(CURDIR)/../dut/fifo.sv
 VERILOG_SOURCES = $(DUT)
 TOPLEVEL = fifo
 MODULE   = test_fifo
 
-export PYTHONPATH := $(CURDIR)/../../lib:$(PYTHONPATH)
+export PYTHONPATH := $(CURDIR)/../lib:$(PYTHONPATH)
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
