@@ -1,0 +1,14 @@
+python -m craft_mutate.mutate --tb tb/fifo --pool tb/fifo/mutants_released.yaml --sim icarus
+[baseline] running clean fifo.sv through fifo ...
+  clean RTL: 5 tests passed.
+
+  [found  ] full_offbyone        (test-failed)  -- full asserts one entry too early (cnt == DEPTH-1)
+  [found  ] empty_offbyone       (test-failed)  -- empty asserts one entry too early (cnt == 1)
+  [found  ] ignore_full          (test-failed)  -- writes are accepted even when full (overflow)
+  [found  ] ignore_empty         (test-failed)  -- reads are accepted even when empty (underflow)
+  [found  ] count_wr_dec         (test-failed)  -- a write-only cycle decrements the count
+  [found  ] rd_data_wrptr        (test-failed)  -- rd_data reads from the write pointer instead of the read pointer
+  [found  ] mem_corrupt          (test-failed)  -- stored data is corrupted (+1) on write
+  [found  ] wrptr_wrap_early     (test-failed)  -- write pointer wraps one slot early
+
+==== found/total = 8/8  =  100.0%  (threshold 90%) ====

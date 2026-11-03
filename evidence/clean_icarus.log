@@ -1,0 +1,52 @@
+make -C tb/fifo SIM=icarus
+make: Entering directory '/home/net/wi323300/craft-vv-student/code/tb/fifo'
+rm -f results.xml
+"make" -f Makefile results.xml
+make[1]: Entering directory '/home/net/wi323300/craft-vv-student/code/tb/fifo'
+rm -f results.xml
+MODULE=test_fifo TESTCASE= TOPLEVEL=fifo TOPLEVEL_LANG=verilog \
+         /usr/bin/vvp -M /opt/course/cocotb-env/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:108  in set_program_name_in_venv        Using Python virtual environment interpreter at /opt/course/cocotb-env/bin/python
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /opt/course/cocotb-env/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1793738298
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_directed_corners
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_pointer_wrap_and_reset
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_seeded_random_interleave
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_idle_hold_and_flag_transitions
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_synchronous_reset_with_requests
+     0.00ns INFO     cocotb.regression                  running test_fifo_directed_corners (1/5)
+   481.00ns INFO     cocotb.fifo                        Directed FIFO boundary tests and ordering checks passed
+   481.00ns INFO     cocotb.regression                  test_fifo_directed_corners passed
+   481.00ns INFO     cocotb.regression                  running test_fifo_pointer_wrap_and_reset (2/5)
+  1842.00ns INFO     cocotb.fifo                        Pointer wrap and midstream reset checks passed
+  1842.00ns INFO     cocotb.regression                  test_fifo_pointer_wrap_and_reset passed
+  1842.00ns INFO     cocotb.regression                  running test_fifo_seeded_random_interleave (3/5)
+ 13903.00ns INFO     cocotb.fifo                        1,200 seeded randomized FIFO transactions passed; seed=0x4701
+ 13903.00ns INFO     cocotb.regression                  test_fifo_seeded_random_interleave passed
+ 13903.00ns INFO     cocotb.regression                  running test_fifo_idle_hold_and_flag_transitions (4/5)
+                                                          Cover 0->1, 7->8, 8->7, 1->0 and hold states with FWFT checks.
+ 14214.00ns INFO     cocotb.fifo                        Idle and key flag transition checks passed
+ 14214.00ns INFO     cocotb.regression                  test_fifo_idle_hold_and_flag_transitions passed
+ 14214.00ns INFO     cocotb.regression                  running test_fifo_synchronous_reset_with_requests (5/5)
+                                                          Check specified reset outputs on a clock edge with both enables high.
+                                                          
+                                                          A reset-time write request is a security/trust control combination. The
+                                                          spec requires the reset outputs but does not define a transfer on that edge.
+ 14315.00ns INFO     cocotb.fifo                        Synchronous reset with asserted controls and recovery passed
+ 14315.00ns INFO     cocotb.regression                  test_fifo_synchronous_reset_with_requests passed
+ 14315.00ns INFO     cocotb.regression                  *************************************************************************************************************
+                                                        ** TEST                                                 STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *************************************************************************************************************
+                                                        ** test_fifo.test_fifo_directed_corners                  PASS         481.00           0.03      17923.94  **
+                                                        ** test_fifo.test_fifo_pointer_wrap_and_reset            PASS        1361.00           0.07      18847.86  **
+                                                        ** test_fifo.test_fifo_seeded_random_interleave          PASS       12061.00           0.66      18274.06  **
+                                                        ** test_fifo.test_fifo_idle_hold_and_flag_transitions    PASS         311.00           0.02      19105.01  **
+                                                        ** test_fifo.test_fifo_synchronous_reset_with_requests   PASS         101.00           0.01      17965.60  **
+                                                        *************************************************************************************************************
+                                                        ** TESTS=5 PASS=5 FAIL=0 SKIP=0                                     14315.00           1.47       9756.39  **
+                                                        *************************************************************************************************************
+                                                        
+make[1]: Leaving directory '/home/net/wi323300/craft-vv-student/code/tb/fifo'
+make: Leaving directory '/home/net/wi323300/craft-vv-student/code/tb/fifo'
