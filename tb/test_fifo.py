@@ -1,172 +1,21 @@
-"""Homework 4: layered, model-based verification of the synchronous FWFT FIFO.
+"""Project 1 directed baseline + HW4 regression, using layered modules.
 
-Run from code/:  just test fifo
-                  just mutate fifo
+Uses the original HW4 suite (historically 3/3 and 8/8 released mutants), plus
+new directed tests for synchronous reset control overlap, idle/head holds and
+all four key occupancy transitions. Project 1 results must be measured on Eustis.
 
-The driver drives on falling edges.  The scoreboard advances FifoModel using
-pre-rising-edge requests, and the monitor samples settled outputs 1 ns after
-the rising edge.  Model checks are independent of DUT implementation signals.
+Run on Eustis from ~/craft-vv-student/code:
+    source /opt/course/cocotb-env/bin/activate
+    just test fifo icarus
 """
-
-from dataclasses import dataclass
 import random
-from typing import Optional
-
 import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import FallingEdge, RisingEdge, Timer
-from models.fifo_model import FifoModel
 
+from fifo_bench import FifoBench
 
 WIDTH = 8
 DEPTH = 8
-CLOCK_NS = 10
 SEED = 0x4701
-
-
-@dataclass(frozen=True)
-class FifoTransaction:
-    wr_en: int = 0
-    rd_en: int = 0
-    wr_data: int = 0
-
-
-@dataclass(frozen=True)
-class FifoObservation:
-    count: int
-    full: int
-    empty: int
-    rd_data: Optional[int]
-    wr_en: int
-    rd_en: int
-    wr_data: int
-
-
-class FifoDriver:
-    """Translate a transaction into DUT inputs, driven at a falling edge."""
-
-    def __init__(self, dut):
-        self.dut = dut
-
-    async def cycle(self, wr_en=0, rd_en=0, wr_data=0):
-        tx = FifoTransaction(int(bool(wr_en)), int(bool(rd_en)), wr_data & ((1 << WIDTH) - 1))
-        await FallingEdge(self.dut.clk)
-        self.dut.wr_en.value = tx.wr_en
-        self.dut.rd_en.value = tx.rd_en
-        self.dut.wr_data.value = tx.wr_data
-        return tx
-
-
-class FifoMonitor:
-    """Observe interface pins, not the FIFO's internal pointers or memory."""
-
-    def __init__(self, dut):
-        self.dut = dut
-
-    def read_pins(self):
-        count = int(self.dut.count.value)
-        full = int(self.dut.full.value)
-        empty = int(self.dut.empty.value)
-        # rd_data is not specified when empty and may be X in Icarus.
-        head = int(self.dut.rd_data.value) if not empty else None
-        return FifoObservation(
-            count=count,
-            full=full,
-            empty=empty,
-            rd_data=head,
-            wr_en=int(self.dut.wr_en.value),
-            rd_en=int(self.dut.rd_en.value),
-            wr_data=int(self.dut.wr_data.value),
-        )
-
-    async def sample(self):
-        await RisingEdge(self.dut.clk)
-        await Timer(1, units="ns")  # wait for sequential updates and FWFT settle
-        return self.read_pins()
-
-
-class FifoScoreboard:
-    """Advance the course's oracle pre-edge; check *all* valid outputs post-edge."""
-
-    def __init__(self):
-        self.model = FifoModel(WIDTH, DEPTH)
-        self.cycles = 0
-
-    def reset(self):
-        self.model.reset()
-
-    def predict(self, tx):
-        # FifoModel gates read/write with pre-edge full and empty states.
-        self.model.step(tx.wr_en, tx.wr_data, tx.rd_en)
-
-    def check(self, observed, tx=None, label=""):
-        self.cycles += 1
-        info = (
-            f"cycle={self.cycles}, case={label}, tx={tx}, "
-            f"expected_queue={list(self.model.q)}, observed={observed}"
-        )
-        assert observed.count == self.model.count, "count mismatch: " + info
-        assert observed.full == int(self.model.full), "full mismatch: " + info
-        assert observed.empty == int(self.model.empty), "empty mismatch: " + info
-        if not self.model.empty:
-            assert observed.rd_data == self.model.head, "FWFT head mismatch: " + info
-        if tx is not None:
-            assert observed.wr_en == tx.wr_en, "write-enable pin mismatch: " + info
-            assert observed.rd_en == tx.rd_en, "read-enable pin mismatch: " + info
-            assert observed.wr_data == tx.wr_data, "write-data pin mismatch: " + info
-
-
-class FifoBench:
-    """Reusable transaction-level glue connecting the three independent parts."""
-
-    def __init__(self, dut):
-        self.dut = dut
-        self.driver = FifoDriver(dut)
-        self.monitor = FifoMonitor(dut)
-        self.scoreboard = FifoScoreboard()
-
-    @classmethod
-    async def start(cls, dut):
-        bench = cls(dut)
-        dut.rst_n.value = 0
-        dut.wr_en.value = 0
-        dut.rd_en.value = 0
-        dut.wr_data.value = 0
-        cocotb.start_soon(Clock(dut.clk, CLOCK_NS, units="ns").start())
-        # Check the reset state after *each* of three rising edges.
-        for i in range(3):
-            obs = await bench.monitor.sample()
-            bench.scoreboard.reset()
-            bench.scoreboard.check(obs, label=f"initial reset {i}")
-        dut.rst_n.value = 1
-        return bench
-
-    async def reset(self):
-        """Exercise active-low synchronous reset even when data is queued."""
-        await FallingEdge(self.dut.clk)
-        self.dut.wr_en.value = 0
-        self.dut.rd_en.value = 0
-        self.dut.wr_data.value = 0
-        self.dut.rst_n.value = 0
-        obs = await self.monitor.sample()
-        self.scoreboard.reset()
-        self.scoreboard.check(obs, label="midstream synchronous reset")
-        self.dut.rst_n.value = 1
-
-    async def cycle(self, wr_en=0, rd_en=0, wr_data=0, label=""):
-        tx = await self.driver.cycle(wr_en, rd_en, wr_data)
-        self.scoreboard.predict(tx)  # must happen BEFORE the rising edge
-        obs = await self.monitor.sample()
-        self.scoreboard.check(obs, tx=tx, label=label)
-        return obs
-
-    async def fill(self, values):
-        for value in values:
-            await self.cycle(wr_en=1, wr_data=value, label="fill")
-
-    async def drain(self):
-        while not self.scoreboard.model.empty:
-            await self.cycle(rd_en=1, label="drain / check FIFO order")
 
 
 @cocotb.test()
@@ -272,3 +121,49 @@ async def test_fifo_seeded_random_interleave(dut):
     await tb.drain()
     await tb.cycle(rd_en=1, label="post-random empty read")
     dut._log.info("1,200 seeded randomized FIFO transactions passed; seed=%#x", SEED)
+
+
+@cocotb.test()
+async def test_fifo_idle_hold_and_flag_transitions(dut):
+    """Cover 0->1, 7->8, 8->7, 1->0 and hold states with FWFT checks."""
+    tb = await FifoBench.start(dut)
+
+    for _ in range(3):
+        await tb.cycle(label="idle when empty")
+    await tb.cycle(wr_en=1, wr_data=0x55, label="empty to one (FWFT first word)")
+    for _ in range(3):
+        await tb.cycle(label="idle with valid head")
+
+    await tb.fill([0x30 + i for i in range(DEPTH - 2)])
+    assert tb.scoreboard.model.count == DEPTH - 1
+    await tb.cycle(label="hold at near-full")
+    await tb.cycle(wr_en=1, wr_data=0xC3, label="near-full to full")
+    assert tb.scoreboard.model.full
+    for _ in range(3):
+        await tb.cycle(label="idle when full")
+    await tb.cycle(rd_en=1, label="full to near-full")
+    while tb.scoreboard.model.count > 1:
+        await tb.cycle(rd_en=1, label="drain to one")
+    await tb.cycle(label="hold at one")
+    await tb.cycle(rd_en=1, label="one to empty")
+    await tb.cycle(label="idle after draining")
+    dut._log.info("Idle and key flag transition checks passed")
+
+
+@cocotb.test()
+async def test_fifo_synchronous_reset_with_requests(dut):
+    """Check specified reset outputs on a clock edge with both enables high.
+
+    A reset-time write request is a security/trust control combination. The
+    spec requires the reset outputs but does not define a transfer on that edge.
+    """
+    tb = await FifoBench.start(dut)
+    await tb.fill([0xD1, 0xE2, 0xF3])
+    assert tb.scoreboard.model.count == 3
+    await tb.reset(wr_en=1, rd_en=1, wr_data=0xA5)
+    assert tb.scoreboard.model.empty
+    await tb.cycle(wr_en=1, wr_data=0x87, label="first write after reset")
+    await tb.cycle(label="hold new FWFT head")
+    await tb.cycle(rd_en=1, label="first read after reset")
+    assert tb.scoreboard.model.empty
+    dut._log.info("Synchronous reset with asserted controls and recovery passed")
