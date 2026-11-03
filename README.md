@@ -1,1 +1,1 @@
-# Project-1-V-V-of-Digital-Systems
+# Project 1 Verification and Validation of Digital Systems
