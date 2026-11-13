@@ -78,7 +78,7 @@ surviving mutants: ignore_full, ignore_empty
 | 1 | The AI will generate illegal transactions or fail randomization because the transaction class lacks live FIFO state synchronization. |The AI incorrectly randomized occupancy and caused solver contradictions at boundaries, prevented testing overflow/underflow, leaving 2 mutants surviving. | confirmed |
 | 2 | The AI will fail to generate stimulus that reaches complex boundary corner cases (simultaneous read/write at the full boundary). | The distribution successfully caught the off-by-one and pointer-wrap mutants. However, it explicitly blocked simultaneous read/writes at the full boundary to maintain strict legality. | partly |
 
-**Anything I did not predict:** \
+**Anything I did not predict:** 
 1. SystemVerilog-to-Python API Hallucinations: The AI struggled with the specific Python verification library API, mixing it up with SystemVerilog concepts. It imported the wrong module name, treated constrained random fields like standard variables, improperly formatted the distribution weights, and incorrectly nested the distribution function.
 2. Every fix made to the AI's output:
 
