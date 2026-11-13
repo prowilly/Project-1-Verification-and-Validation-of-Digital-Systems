@@ -21,6 +21,3 @@ The assistant executed the automated checks in `evidence/current/`. Each summary
 
 Banmeet's entire `crv/` and `coverage/` directories and Daniel's `ai_log.md` are preserved byte-for-byte. Tests run temporary copies so generated reports cannot replace Banmeet's committed report. William explicitly requested completion of this file despite its initial template having been committed by Daniel.
 
-## Remaining team deliverables
-
-`REPORT.pdf` and the recorded demo link remain pending at William's request. Team review and individual attestations are not inferred from commits or automated test results. No confidential peer-evaluation content is included here.
