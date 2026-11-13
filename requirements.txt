@@ -1,0 +1,7 @@
+cocotb==1.9.2
+cocotb-coverage==1.2.0
+pyvsc==1.1.0
+pyboolector==3.2.4.38488416565
+dv-solve==0.5.0
+pyucis==0.2.2
+PyYAML==6.0.3

@@ -1,9 +1,9 @@
-# cocotb + Verilator flow for the ALU testbench.
-#   make            # run with Verilator (default)
+# Layered cocotb FIFO baseline.
+#   make            # run with Icarus (default)
 #   make SIM=icarus # run with Icarus Verilog
 #   make DUT=/path/to/fifo.sv   # override the DUT (used by the mutation harness)
 TOPLEVEL_LANG ?= verilog
-SIM           ?= verilator
+SIM           ?= icarus
 
 DUT ?= $(CURDIR)/../dut/fifo.sv
 VERILOG_SOURCES = $(DUT)

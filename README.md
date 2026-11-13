@@ -1,128 +1,90 @@
 # Project 1 — Constrained-Random Verification of a Synchronous FIFO
 
-**EEE 4701 · Verification & Validation of Digital Systems**  
-University of Central Florida · Fall 2026
+**EEE 4701 · Verification and Validation of Digital Systems**\
+University of Central Florida · Fall 2026\
+**Team:** William Garland · Banmeet Singh · Daniel Jo
 
-## Overview
+A layered cocotb verification environment for the supplied synchronous first-word-fall-through (FWFT) FIFO. It combines an independent reference queue, directed tests, pyvsc stimulus, functional coverage and released-mutation testing.
 
-This repository contains our team's verification environment for a parameterized **synchronous first-word-fall-through (FWFT) FIFO**. Using the supplied SystemVerilog RTL and written specification as the design-under-test (DUT) contract, we develop a layered **cocotb** testbench and evaluate correctness through directed tests, seeded randomized stimulus, functional coverage, and mutation testing.
+## Project status
 
-The objective is not just to demonstrate passing tests: it is to provide **traceable requirements, reproducible results, measurable coverage, and an honest assessment of remaining verification gaps**.
+The repository includes the verification plan, layered environment, constrained-random tests, coverage model/report, findings, Check the Machine record and completed contributions record. **`REPORT.pdf` and the demo link remain pending.** Measured results and limitations are documented below; hidden-pool performance and team approval are not assumed.
 
-## Verification approach
+Banmeet's `crv/` and `coverage/` and Daniel's `ai_log.md` remain unchanged. Fresh verification evidence is stored separately in `evidence/current/`.
 
-- **Driver:** applies clock-cycle transactions to the FIFO inputs.
-- **Monitor:** samples DUT outputs and FIFO status after the relevant clock edge.
-- **Reference-queue scoreboard:** independently models FIFO behavior and checks ordering, occupancy, flags, and output data.
-- **Constrained-random verification (CRV):** extends the baseline stimulus using `pyvsc` constraints and reproducible seeds. *(In progress.)*
-- **Functional coverage:** measures important operations, occupancy boundaries, and crosses; tracks coverage convergence. *(In progress.)*
-- **Mutation testing:** evaluates whether the test suite detects intentionally faulty implementations.
+## Results
 
-### Primary scenarios
+| Check | Measured result | Evidence |
+|---|---|---|
+| Layered baseline | **5/5 tests passed** | [Baseline log](evidence/current/regression/baseline/run.log) |
+| CRV seeds 4701, 17, 4702 | **70/70 bins (100%)** each, 5,000 cycles per seed | [Regression summary](evidence/current/regression/summary.json) |
+| Seed 4701 replay | **Identical stimulus and coverage** | [Replay evidence](evidence/current/regression/seed-4701-repeat/) |
+| WIDTH=16 DEPTH=5; WIDTH=8 DEPTH=4 | Functional checks pass; coverage **69/70** and **70/70**, respectively | [Parameter results](evidence/current/regression/) |
+| Released mutants, baseline | **8/8 detected** | [Mutation summary](evidence/current/mutations/summary.json) |
+| Released mutants, CRV | **8/8 detected** | [Mutation summary](evidence/current/mutations/summary.json) |
 
-Reset and recovery · FIFO data ordering · Empty/full boundaries · Overflow and underflow requests · Simultaneous reads and writes · Pointer wraparound · Idle cycles and flag transitions · FWFT data visibility
 
-## Repository layout
+The coverage total refers to Banmeet's existing 70-bin model. Flags, valid-head data, ordering and reset recovery are also checked by assertions. Measured CRV probabilities differ from the declared state-dependent weights; see [the distribution review in FINDINGS.md](FINDINGS.md#stimulus-distribution-review). This discrepancy is disclosed without rewriting the team's constraint implementation.
 
-```text
-.
-├── dut/
-│   ├── fifo.sv                  # Supplied FIFO RTL
-│   └── specs/fifo.md            # Official FIFO behavior specification
-├── lib/models/
-│   └── fifo_model.py            # Reference model provided with course materials
-├── tb/
-│   ├── fifo_types.py            # Transaction definitions
-│   ├── fifo_driver.py           # Signal-level stimulus driver
-│   ├── fifo_monitor.py          # DUT observation layer
-│   ├── fifo_scoreboard.py       # Reference-queue checks
-│   ├── fifo_bench.py            # Verification environment integration
-│   ├── test_fifo.py             # cocotb test suite
-│   ├── Makefile                 # Simulation configuration
-│   └── mutants_released.yaml   # Released mutant definitions
-├── crv/                         # pyvsc stimulus and seeded regressions (in progress)
-├── coverage/                    # Coverage model, results, and closure (in progress)
-├── evidence/
-│   ├── clean_icarus.log         # Baseline simulation output
-│   ├── results.xml              # cocotb test results
-│   └── mutation_icarus.log      # Released mutant detection output
-├── vplan.md                     # Verification scope, traceability, and closure plan
-├── CONTRIBUTIONS.md             # Individual team contributions
-└── README.md
+The current released suite has no surviving mutants. [FINDINGS.md](FINDINGS.md) analyzes `ignore_full` and `ignore_empty` from Daniel's documented earlier 6/8 run, separately from the new results. The hidden grading pool has not been run.
+
+## Run the project
+
+Use Python 3.12, Icarus Verilog 12.0 and the pinned Python packages. On Eustis, activate the course environment if it provides those versions. For a separate local environment:
+
+```bash
+git clone https://github.com/prowilly/Project-1-Verification-and-Validation-of-Digital-Systems.git
+cd Project-1-Verification-and-Validation-of-Digital-Systems
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+iverilog -V
+python scripts/run_verification.py --output evidence/generated
 ```
 
-The final submission will also include `FINDINGS.md`, `ai_log.md`, `REPORT.pdf`, and a demo link as required by the project handout. `HW4.zip` is retained in the repository as an earlier-work archive.
+Icarus Verilog is a system prerequisite; `pip` installs the Python dependencies only. The full command runs unit checks, the baseline, three CRV seeds and replay, extra configurations, coverage-convergence measurements, and both released-mutation campaigns.
 
-## Running the baseline tests on Eustis
+For individual groups:
 
-The baseline has been tested on the UCF Eustis environment with **Python 3.12, cocotb 1.9.2, and Icarus Verilog 12.0**.
+```bash
+python scripts/run_verification.py --suite regression
+python scripts/run_verification.py --suite convergence
+python scripts/run_verification.py --suite mutations
+```
 
-1. Connect to Eustis from PowerShell (replace `YOUR_NID`):
+The runner uses a fresh temporary source copy for each simulation. It records commands, tool versions, source hashes, seeds, test XML, stimulus measurements and coverage. It checks XML outcomes rather than relying only on `make`'s exit status, enforces closure in the required regressions, and checks that teammate-owned files remain unchanged. Generated local evidence goes to the ignored `evidence/generated/` directory by default.
 
-   ```powershell
-   ssh YOUR_NID@eustis.eecs.ucf.edu
-   ```
+The baseline alone also runs with `make -C tb SIM=icarus`. For CRV, the root runner is recommended because a direct `make -C crv` writes generated coverage into `coverage/` using the existing team's Makefile/model.
 
-2. On Eustis, clone the repository and activate the course environment:
+## Repository guide
 
-   ```bash
-   git clone https://github.com/prowilly/Project-1-Verification-and-Validation-of-Digital-Systems.git
-   cd Project-1-Verification-and-Validation-of-Digital-Systems
-   source /opt/course/cocotb-env/bin/activate
-   ```
-
-3. Run the FIFO simulation:
-
-   ```bash
-   make -C tb SIM=icarus
-   ```
-
-The Makefile uses the repository's `dut/fifo.sv` and `lib/` paths. The course-provided Eustis environment is recommended; a local setup requires compatible simulators and Python dependencies.
-
-**Reproducibility:** Preserve the exact command, configuration, seed, and generated test report for each regression. Do not commit generated `sim_build/`, `__pycache__/`, or transient `results.xml` files; curated outputs belong under `evidence/`.
-
-## Baseline results
-
-| Check | Result | Evidence |
-|---|---|---|
-| Layered cocotb baseline | **5 / 5 passed** | `evidence/clean_icarus.log` and `evidence/results.xml` |
-| Seeded randomized interleave | **1,200 transactions passed**, seed `0x4701` | Baseline simulation log |
-| Released mutant pool | **8 / 8 detected (100%)** | `evidence/mutation_icarus.log` |
-| Independent GitHub-checkout simulation | **5 / 5 passed** on Eustis | Reproduced using `make -C tb SIM=icarus` |
-
-The **8/8 mutation result was obtained using the released pool in the original course environment** (`just mutate fifo`), not yet as a standalone mutation run from this GitHub checkout. These baseline results do **not** imply that Project 1 functional coverage closure, pyvsc integration, or the hidden mutant assessment is complete.
-
-## Current project status
-
-- [x] Team repository, FIFO RTL, specification, and reference model
-- [x] Verification plan (`vplan.md`) initial version
-- [x] Layered driver, monitor, and reference-queue scoreboard
-- [x] Five passing baseline cocotb tests from the GitHub checkout
-- [x] Eight of eight released mutants detected in the course environment
-- [ ] Integrate `pyvsc` constrained-random transactions and seeded regressions
-- [ ] Close functional coverage and document convergence
-- [ ] Run the integrated mutation suite and analyze surviving mutants, if present
-- [ ] Complete `FINDINGS.md`, `ai_log.md`, final report, and demonstration
-
-## Team workflow
-
-Work is shared on the `main` branch. Team members should pull the latest changes before editing, keep changes focused on their assigned components, and avoid committing generated simulator artifacts.
-
-| Workstream | Primary ownership |
+| Path | Purpose |
 |---|---|
-| Testbench architecture, directed tests, and integration | Verification environment lead |
-| CRV, functional coverage, and mutation analysis | CRV / coverage lead |
-| Check the Machine (`ai_log.md`), report assembly, and demo coordination | AI-evaluation / documentation lead |
+| [`dut/`](dut/) | Supplied RTL and authoritative FIFO specification |
+| [`lib/models/fifo_model.py`](lib/models/fifo_model.py) | Independent reference queue |
+| [`tb/`](tb/) | Driver, monitor, scoreboard, bench, five baseline tests and released mutant definitions |
+| [`crv/`](crv/) | Banmeet's pyvsc transaction class, constraints and seeded regression |
+| [`coverage/`](coverage/) | Banmeet's 70-bin model and original committed coverage report |
+| [`scripts/run_verification.py`](scripts/run_verification.py) | Isolated regression, convergence and mutation runner |
+| [`tests/`](tests/) | Checks for reliable simulation-result handling |
+| [`evidence/current/`](evidence/current/) | Fresh logs, XML, coverage and reproducibility manifests |
+| [`vplan.md`](vplan.md) | Requirements, coverage model, test matrix, risks and closure criteria |
+| [`FINDINGS.md`](FINDINGS.md) | Results, convergence, two historical survivors and remaining limitations |
+| [`ai_log.md`](ai_log.md) | Daniel's original Check the Machine record |
+| [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) | Evidence-backed team contributions and integration disclosure |
+| `HW4.zip`, [`tb/FINDINGS.md`](tb/FINDINGS.md) | Earlier HW4 material, retained as historical context |
 
-All members review the integrated results and record their contributions in `CONTRIBUTIONS.md`.
+## Ownership and submission
 
-## Verification documentation
+William leads the layered environment, integration and verification documentation. Banmeet contributed the CRV and coverage implementation. Daniel contributed the Check the Machine analysis. See [CONTRIBUTIONS.md](CONTRIBUTIONS.md) for commit references and AI-assistance disclosure. Coordinate changes to another member's work with that author.
 
-- **[`vplan.md`](vplan.md):** features, requirement-to-test traceability, coverage plan, risks, and closure criteria.
-- **[`dut/specs/fifo.md`](dut/specs/fifo.md):** authoritative functional specification; RTL is the implementation under test, not a substitute for the specification.
-- **[`evidence/`](evidence/):** reproducible baseline simulation and mutation logs.
-- **`FINDINGS.md` / `ai_log.md` (forthcoming):** integrated results, coverage gaps, mutation survivors, and AI-generated proposal versus measured behavior.
+- [x] Verification plan and requirement-to-test mapping
+- [x] Layered driver, monitor and reference-queue scoreboard
+- [x] pyvsc constraints and seeded regression
+- [x] Existing functional-coverage model and measured closure evidence
+- [x] Current released-mutation results and two historical survivor analyses
+- [x] Check the Machine record and team contributions
+- [ ] Final 4–6 page `REPORT.pdf`
+- [ ] Recorded demo link
 
----
-
-*Course project for EEE 4701. This repository documents educational verification work; coverage closure and final project sign-off remain in progress.*
+The supplied FIFO has fixed FWFT behavior and no `almost_full` signal. Tests follow its actual written specification. Automated results do not constitute teammate review or final course grading.

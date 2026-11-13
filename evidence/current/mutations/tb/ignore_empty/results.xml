@@ -1,0 +1,14 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="4701" />
+    <testcase name="test_fifo_directed_corners" classname="test_fifo" file="/tmp/project1-m4i21sz1/tb/test_fifo.py" lineno="21" time="0.0038938522338867188" sim_time_ns="31.001" ratio_time="7961.524510409014">
+      <failure message="Test failed with RANDOM_SEED=4701" />
+    </testcase>
+    <testcase name="test_fifo_pointer_wrap_and_reset" classname="test_fifo" file="/tmp/project1-m4i21sz1/tb/test_fifo.py" lineno="70" time="0.08249592781066895" sim_time_ns="1361.001" ratio_time="16497.796147266145" />
+    <testcase name="test_fifo_seeded_random_interleave" classname="test_fifo" file="/tmp/project1-m4i21sz1/tb/test_fifo.py" lineno="100" time="0.0995182991027832" sim_time_ns="2591.001" ratio_time="26035.422865537483">
+      <failure message="Test failed with RANDOM_SEED=4701" />
+    </testcase>
+    <testcase name="test_fifo_idle_hold_and_flag_transitions" classname="test_fifo" file="/tmp/project1-m4i21sz1/tb/test_fifo.py" lineno="126" time="0.014616250991821289" sim_time_ns="311.00099999999975" ratio_time="21277.754478492763" />
+    <testcase name="test_fifo_synchronous_reset_with_requests" classname="test_fifo" file="/tmp/project1-m4i21sz1/tb/test_fifo.py" lineno="153" time="0.004008054733276367" sim_time_ns="101.0010000000002" ratio_time="25199.50617476657" />
+  </testsuite>
+</testsuites>

@@ -1,0 +1,46 @@
+make: Entering directory '/tmp/project1-t43nzpwu/crv'
+rm -f results.xml
+"make" -f Makefile results.xml
+make[1]: Entering directory '/tmp/project1-t43nzpwu/crv'
+mkdir -p sim_build
+/workspace/scratch/34fef8e672bb/audit-bin/iverilog -o sim_build/sim.vvp -D COCOTB_SIM=1 -s fifo -g2012 -Pfifo.WIDTH=8 -Pfifo.DEPTH=8 -f sim_build/cmds.f -f sim_build/cmds.f  /tmp/project1-t43nzpwu/crv/../dut/fifo.sv
+Command File: Warning: default timescale is being set multiple times.
+                     : using the last valid +timescale found.
+rm -f results.xml
+MODULE=test_fifo TESTCASE= TOPLEVEL=fifo TOPLEVEL_LANG=verilog \
+         /workspace/scratch/34fef8e672bb/audit-bin/vvp -M /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with supplied seed 4701
+     0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_crv_seeded_regression
+     0.00ns INFO     cocotb.regression                  running test_crv_seeded_regression (1/1)
+    31.00ns INFO     cocotb.regression                  test_crv_seeded_regression failed
+                                                        Traceback (most recent call last):
+                                                          File "/tmp/project1-t43nzpwu/crv/test_fifo.py", line 189, in test_crv_seeded_regression
+                                                            await checked_cycle(bench, FifoTransaction(wr, rd, data), label)
+                                                          File "/tmp/project1-t43nzpwu/crv/test_fifo.py", line 152, in checked_cycle
+                                                            observed = await bench.monitor.sample()    # rising edge + 1 ns
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/tmp/project1-t43nzpwu/tb/fifo_monitor.py", line 35, in sample
+                                                            observed = self.read_pins()
+                                                                       ^^^^^^^^^^^^^^^^
+                                                          File "/tmp/project1-t43nzpwu/tb/fifo_monitor.py", line 21, in read_pins
+                                                            head = self._known("rd_data") if not empty else None
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/tmp/project1-t43nzpwu/tb/fifo_monitor.py", line 13, in _known
+                                                            assert value.is_resolvable, f"Unresolved required FIFO output/input: {name}={value}"
+                                                                   ^^^^^^^^^^^^^^^^^^^
+                                                        AssertionError: Unresolved required FIFO output/input: rd_data=xxxxxxxx
+    31.00ns INFO     cocotb.regression                  **********************************************************************************************
+                                                        ** TEST                                  STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **********************************************************************************************
+                                                        ** test_fifo.test_crv_seeded_regression   FAIL          31.00           0.02       1483.27  **
+                                                        **********************************************************************************************
+                                                        ** TESTS=1 PASS=0 FAIL=1 SKIP=0                         31.00           0.29        106.46  **
+                                                        **********************************************************************************************
+                                                        
+make[1]: Leaving directory '/tmp/project1-t43nzpwu/crv'
+make: Leaving directory '/tmp/project1-t43nzpwu/crv'

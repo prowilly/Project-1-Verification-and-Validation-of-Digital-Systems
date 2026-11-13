@@ -1,0 +1,9 @@
+test_assertions_errors_and_skips_are_not_passes (test_verification_tools.ResultChecks.test_assertions_errors_and_skips_are_not_passes) ... ok
+test_expected_count_is_enforced (test_verification_tools.ResultChecks.test_expected_count_is_enforced) ... ok
+test_missing_and_empty_results_are_errors (test_verification_tools.ResultChecks.test_missing_and_empty_results_are_errors) ... ok
+test_trace_excludes_initial_reset_and_final_drain (test_verification_tools.ResultChecks.test_trace_excludes_initial_reset_and_final_drain) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+OK

@@ -1,3 +1,5 @@
+> **Historical HW4 record.** Current Project 1 results and survivor analysis are in [the root FINDINGS.md](../FINDINGS.md). The earlier results below retain their original context.
+
 # FINDINGS — Homework 4: A Testbench With Parts
 
 > Verification and Validation of Digital Systems (EEE 4701)

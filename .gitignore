@@ -9,3 +9,7 @@ results.xml
 # Waveforms
 *.vcd
 *.fst
+
+# Local regression outputs; curated evidence/current is committed
+evidence/generated/
+.venv/

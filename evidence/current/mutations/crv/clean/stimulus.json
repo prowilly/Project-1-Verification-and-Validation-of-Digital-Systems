@@ -1,0 +1,41 @@
+{
+  "cycles": 5000,
+  "groups": {
+    "middle_drain": {
+      "draws": 1175,
+      "reads": 721,
+      "resets": 5,
+      "writes": 733
+    },
+    "middle_fill": {
+      "draws": 1966,
+      "reads": 1217,
+      "resets": 12,
+      "writes": 1218
+    },
+    "near_empty": {
+      "draws": 1147,
+      "reads": 708,
+      "resets": 2,
+      "writes": 706
+    },
+    "near_full": {
+      "draws": 712,
+      "reads": 438,
+      "resets": 3,
+      "writes": 435
+    }
+  },
+  "occupancy": {
+    "0": 329,
+    "1": 818,
+    "2": 693,
+    "3": 648,
+    "4": 649,
+    "5": 575,
+    "6": 576,
+    "7": 514,
+    "8": 198
+  },
+  "stimulus_sha256": "375590713301f5108c44551b4ddcf5b5c74b7ba12537ef4749680ee9d87a23db"
+}

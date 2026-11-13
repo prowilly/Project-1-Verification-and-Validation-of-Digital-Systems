@@ -1,0 +1,316 @@
+{
+  "base_commit": "ba3e41a9cf6670429f2005d62cc366122a6ac588",
+  "environment": {
+    "PyYAML": "6.0.3",
+    "cocotb": "1.9.2",
+    "cocotb-coverage": "1.2.0",
+    "dv-solve": "0.5.0",
+    "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+    "pyboolector": "3.2.4.38488416565",
+    "python": "3.12.14",
+    "pyucis": "0.2.2",
+    "pyvsc": "1.1.0"
+  },
+  "protected_sha256": {
+    "ai_log.md": "907b0b96df622a7e0e91ba89846ba1d518d23eb9bc5a4fdba2d17faec6b1f542",
+    "coverage/README.md": "e4059db13144a8e835e90d18f949da57e9812ab225b9f46bcbc3ac6ce1994fc1",
+    "coverage/coverage_report.yml": "7cdf00a5a57d30dd0310800517b7831eacf19ce7ef9ac8932259aa41db7ab888",
+    "coverage/fifo_coverage.py": "5d5fc922fb14938152498519acfaec707c5b876c8408d9f7af884fb3de06bbef",
+    "crv/Makefile": "1fa987ff2d8d936290e1799982aec8b7d9009eadb2b5110c49f98af21525b832",
+    "crv/README.md": "a805bee57e3f3d7a8b2ff4d898773b6e16438e14c0bfbc77fa667203c8dd24f9",
+    "crv/test_fifo.py": "c2bbeb951820bf5f563769eebf1f1a9d1d1fdc2c7a0532c1c471dcfb841545e1"
+  },
+  "repeat_identical": true,
+  "runs": [
+    {
+      "command": [
+        "make",
+        "-C",
+        "tb",
+        "SIM=icarus"
+      ],
+      "cycles": null,
+      "depth": 8,
+      "environment": {
+        "DEPTH": "8",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4701",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "baseline",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": false,
+      "seed": 4701,
+      "skipped": 0,
+      "status": "passed",
+      "suite": "tb",
+      "tests": 5,
+      "width": 8
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": 1200,
+        "hit": 70,
+        "holes": [],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 8,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=8 -Pfifo.DEPTH=8",
+        "DEPTH": "8",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4701",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "seed-4701",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": true,
+      "seed": 4701,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "375590713301f5108c44551b4ddcf5b5c74b7ba12537ef4749680ee9d87a23db",
+      "suite": "crv",
+      "tests": 1,
+      "width": 8
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=17",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": 410,
+        "hit": 70,
+        "holes": [],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 8,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=8 -Pfifo.DEPTH=8",
+        "DEPTH": "8",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "17",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "seed-17",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": true,
+      "seed": 17,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "fb5c158d605901621390d6f5c614f635d1e6453084323ac10c3abac9e7adfb2b",
+      "suite": "crv",
+      "tests": 1,
+      "width": 8
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=4702",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": 1390,
+        "hit": 70,
+        "holes": [],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 8,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=8 -Pfifo.DEPTH=8",
+        "DEPTH": "8",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4702",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "seed-4702",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": true,
+      "seed": 4702,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "79b5dea19904c0c6d8d3d578b8c41f0e9b5171885b25224540fc65fb2755d776",
+      "suite": "crv",
+      "tests": 1,
+      "width": 8
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": 1200,
+        "hit": 70,
+        "holes": [],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 8,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=8 -Pfifo.DEPTH=8",
+        "DEPTH": "8",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4701",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "seed-4701-repeat",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": true,
+      "seed": 4701,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "375590713301f5108c44551b4ddcf5b5c74b7ba12537ef4749680ee9d87a23db",
+      "suite": "crv",
+      "tests": 1,
+      "width": 8
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": null,
+        "hit": 69,
+        "holes": [
+          "fifo.write_data:alternating"
+        ],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 5,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=16 -Pfifo.DEPTH=5",
+        "DEPTH": "5",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4701",
+        "WIDTH": "16"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "width16-depth5",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": false,
+      "seed": 4701,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "072f29afa6862e79058c6fa74a28c2b0f05515acbdf6fcd946a9ecc5ec9098dc",
+      "suite": "crv",
+      "tests": 1,
+      "width": 16
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "STIM=biased"
+      ],
+      "coverage": {
+        "closed_at": 1200,
+        "hit": 70,
+        "holes": [],
+        "total": 70
+      },
+      "cycles": 5000,
+      "depth": 4,
+      "environment": {
+        "COMPILE_ARGS": "-Pfifo.WIDTH=8 -Pfifo.DEPTH=4",
+        "DEPTH": "4",
+        "PYTHONHASHSEED": "0",
+        "RANDOM_SEED": "4701",
+        "WIDTH": "8"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "isolated_copy": true,
+      "mutation": null,
+      "name": "width8-depth4",
+      "passive_trace": "FIFO_TRACE_FILE=<temporary directory>/trace.jsonl",
+      "require_coverage_closure": false,
+      "seed": 4701,
+      "skipped": 0,
+      "status": "passed",
+      "stimulus_sha256": "71762fb3233d52c5f8689c7aa52b10e7e32ace8d774d9be8461a171a094ffbb4",
+      "suite": "crv",
+      "tests": 1,
+      "width": 8
+    }
+  ],
+  "source_sha256": {
+    "coverage/fifo_coverage.py": "5d5fc922fb14938152498519acfaec707c5b876c8408d9f7af884fb3de06bbef",
+    "crv/Makefile": "1fa987ff2d8d936290e1799982aec8b7d9009eadb2b5110c49f98af21525b832",
+    "crv/test_fifo.py": "c2bbeb951820bf5f563769eebf1f1a9d1d1fdc2c7a0532c1c471dcfb841545e1",
+    "dut/fifo.sv": "6647fd89591c56687e31cb07364e88b05d72ff9ce3958fce2cb6ad950ffbd750",
+    "lib/models/fifo_model.py": "0974e1cb095f4bc587de068d9b21f3c4b62aceeeb753498535f5efe2adfb28c7",
+    "requirements.txt": "089c69f29dd4f966eda397e1dc3289b7a0560e27df79dcbf306b7c88072082f4",
+    "scripts/run_verification.py": "7826e6f9fea4c2b5d53f23c690eacd219cfee16c70c1a9ec719d46bbbdd9666c",
+    "tb/Makefile": "c24e0cef1d7947e72c42d60d7e4a46a2a261fa4af78dbdb0822fe37927949a65",
+    "tb/fifo_bench.py": "44ab141186022374331148ab5393bf2d69ec345924ba76bc1ba24fe3d3c3485c",
+    "tb/fifo_driver.py": "f551ae38051cbc74a257f27835cfae548ffeb188ce958790179a486b1bf745f0",
+    "tb/fifo_monitor.py": "f995b9c6382e7b5136adda35088f37334b8d0f0fad0c1f557b33a0ed8d1c05c1",
+    "tb/fifo_scoreboard.py": "29fa9bf0a27860dd288509bf2797d3bdfe9bf3e0310e6dc24fe6aea22c0121b2",
+    "tb/fifo_trace.py": "01b7b1d02f636b6004fc9ed6bae419935d0e3af1612d43fb5b413fa96c8e5d6e",
+    "tb/fifo_types.py": "810b31e4642de78631a7aec1bd246be8be3d63e898b08e58936fdd37f21a822a",
+    "tb/mutants_released.yaml": "93de0339238b470bc23c302a3614ff008029e34937caea9aa1680116f8d35408",
+    "tb/test_fifo.py": "00cf2cc76d523e862e7ee5cb3a88d9a82ec4919ad397f687a0e414787f2d637c",
+    "tests/test_verification_tools.py": "a575a90153734c236d35bf45461ac74b82b48352c06938694dde7a5d769d1a5f"
+  }
+}
