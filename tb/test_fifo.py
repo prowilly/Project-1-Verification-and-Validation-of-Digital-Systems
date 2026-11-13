@@ -2,11 +2,11 @@
 
 Uses the original HW4 suite (historically 3/3 and 8/8 released mutants), plus
 new directed tests for synchronous reset control overlap, idle/head holds and
-all four key occupancy transitions. Current Project 1 results are saved under evidence/current/.
+all four key occupancy transitions. Project 1 results must be measured on Eustis.
 
-Run from the repository root:
-    make -C tb SIM=icarus
-    python scripts/run_verification.py --suite regression
+Run on Eustis from ~/craft-vv-student/code:
+    source /opt/course/cocotb-env/bin/activate
+    just test fifo icarus
 """
 import random
 import cocotb

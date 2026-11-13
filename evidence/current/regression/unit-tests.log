@@ -1,8 +1,0 @@
-test_temporal_events_and_boundary_acceptance (test_coverage_model.CoverageChecks.test_temporal_events_and_boundary_acceptance) ... ok
-test_assertions_errors_and_skips_are_not_passes (test_verification_tools.ResultChecks.test_assertions_errors_and_skips_are_not_passes) ... ok
-test_missing_and_empty_results_are_errors (test_verification_tools.ResultChecks.test_missing_and_empty_results_are_errors) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 0.040s
-
-OK

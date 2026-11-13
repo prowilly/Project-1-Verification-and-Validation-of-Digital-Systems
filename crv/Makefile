@@ -1,24 +1,21 @@
-# Seeded pyvsc regression; defaults are the 8x8 submission configuration.
+# cocotb flow for the Project 1 constrained-random (pyvsc) FIFO regression.
+#   make                          # Icarus, SEED=4701, N_CYCLES=5000
+#   make SEED=17 N_CYCLES=8000    # any seed / length (seed is the source of truth)
+#   make DUT=/path/to/fifo.sv     # override the DUT (used by the mutation harness)
 TOPLEVEL_LANG ?= verilog
-SIM ?= icarus
+SIM           ?= icarus
+
 DUT ?= $(CURDIR)/../dut/fifo.sv
 VERILOG_SOURCES = $(DUT)
 TOPLEVEL = fifo
-MODULE = test_fifo
-WIDTH ?= 8
-DEPTH ?= 8
-SEED ?= 4701
+MODULE   = test_fifo
+
+SEED     ?= 4701
 N_CYCLES ?= 5000
-STIM ?= biased
-RESET_DENOMINATOR ?= 200
-REQUIRE_CLOSURE ?= 1
-export WIDTH DEPTH SEED N_CYCLES STIM RESET_DENOMINATOR REQUIRE_CLOSURE
+STIM     ?= biased
+export SEED N_CYCLES STIM
+
+# tb/ (driver/monitor/scoreboard/bench), lib/ (FifoModel), coverage/ (coverage model)
 export PYTHONPATH := $(CURDIR):$(CURDIR)/../tb:$(CURDIR)/../lib:$(CURDIR)/../coverage:$(PYTHONPATH)
-ifeq ($(SIM),icarus)
-COMPILE_ARGS += -Pfifo.WIDTH=$(WIDTH) -Pfifo.DEPTH=$(DEPTH)
-else ifeq ($(SIM),verilator)
-COMPILE_ARGS += -GWIDTH=$(WIDTH) -GDEPTH=$(DEPTH)
-endif
-# Separate elaborations prevent stale binaries when the parameters change.
-SIM_BUILD ?= sim_build/$(SIM)-$(WIDTH)x$(DEPTH)
+
 include $(shell cocotb-config --makefiles)/Makefile.sim

@@ -1,117 +1,145 @@
-# Verification plan — Project 1 synchronous FWFT FIFO
+# Verification plan — synchronous FWFT FIFO (Project 1)
 
-**Course:** EEE 4701, Verification and Validation of Digital Systems, UCF, Fall 2026.\
-**Revision:** 2, November 13, 2026.\
-**Behavioral authority:** [`dut/specs/fifo.md`](dut/specs/fifo.md).\
-**Execution evidence:** [`evidence/current/`](evidence/current/) and [`FINDINGS.md`](FINDINGS.md).
+**Course:** EEE 4701 — Verification and Validation of Digital Systems  
+**Team / authors:** Project 1 team — enter all team member names and reviewer initials in `CONTRIBUTIONS.md`  
+**Specification:** `dut/specs/fifo.md`, *FIFO specification (dut/fifo.sv)*; file does not state a separate revision  
+**DUT:** `dut/fifo.sv`; **independent expected-behavior review:** `lib/models/fifo_model.py`  
+**Plan revision:** 1.0 (specification-grounded planning document)  
+**Date:** 2026-11-03  
+**Status:** Ready for team review; **Project 1 CRV, coverage, and regression results are not yet measured**.
 
-## 1. Scope and protocol
+> **Verification intent:** Establish, before running Project 1 tests, exactly what FIFO behavior we will check, which input/state combinations we will cover, how we will measure closure, and what evidence will justify signoff. The written FIFO specification is the behavioral authority. The RTL and model are implementation/reference artifacts to check **against** it, not replacements for the spec.
 
-Verify the supplied synchronous, first-word-fall-through FIFO through its public ports. The primary configuration is WIDTH=8, DEPTH=8. Supplemental CRV configurations are WIDTH=16, DEPTH=5 (non-power-of-two depth) and WIDTH=8, DEPTH=4. Each has its own elaboration, reference queue and coverage report. The current coverage partition supports WIDTH>=3 and DEPTH>=4; other configurations are not claimed verified.
+## 1. Scope
 
-- Reset is active-low and synchronous. Count/flags change on the rising edge, not when reset is asserted between edges.
-- A write is accepted iff `wr_en && !full` in the pre-edge state; a full write request is dropped.
-- A read is accepted iff `rd_en && !empty` in the pre-edge state; an empty read request is ignored.
-- All four enable combinations are legal requests. At empty, simultaneous requests accept only the write; at full, they accept only the read; in the interior, both are accepted.
-- Count, full and empty are checked every sampled cycle. `rd_data` is checked against the oldest queued word whenever the expected FIFO is nonempty. Empty-state data is unspecified and is not compared.
-- The supplied interface has no `almost_full` port and no non-FWFT mode. These features, CDC/asynchronous FIFOs, internal-memory implementation, formal proof, synthesis and timing closure are outside this design's verification scope.
+**In scope.** Verify the **synchronous, first-word fall-through (FWFT)** FIFO at its public pins (`clk`, `rst_n`, `wr_en`, `wr_data`, `rd_en`, `rd_data`, `full`, `empty`, and `count`). At the baseline `WIDTH=8`, `DEPTH=8`, check synchronous reset, accepted and rejected operations, occupancy and flags, data integrity and FIFO ordering, output-head visibility, simultaneous traffic at interior and boundary occupancies, idle/hold behavior, repeated pointer wraparound, and reproducible seeded constrained-random traffic. Include a spec-based reference-queue scoreboard, functional coverage with crosses, a mutation-quality regression, and a control-corner security/trust check. Exercise additional parameter combinations where the course runner supports them; report their results separately.
 
-The driver applies requests on falling edges of a 10 ns clock. The CRV checks the unchanged state 1 ns later, predicts accepted transfers from the pre-edge queue, and checks settled outputs 1 ns after the rising edge. Reset tests also verify no asynchronous reset effect. Functional coverage is sampled only after the relevant scoreboard check passes.
+**Out of scope / interface differences.** This particular `fifo.sv` has **no `almost_full` port or threshold** and **no parameter to disable FWFT**. Although the broad Project 1 handout mentions almost-full and optional FWFT, neither is implemented in the supplied FIFO interface. Do not invent signals or promise tests for nonexistent configurations; record the discrepancy as risk R01. Also out of scope: asynchronous FIFO/clock-domain crossing, internal-memory implementation details, formal exhaustive proof, synthesis/timing/power, and the value of `rd_data` while `empty=1` (unspecified by the spec).
 
-## 2. Requirements and test traceability
+**Protocol and observation assumptions (confirmed by specification):**
 
-H means required in the baseline. M means supplemental parameter coverage.
+- `clk` is a rising-edge clock and `rst_n` is **active-low, synchronous reset**: on a rising edge with reset asserted, `count=0`, `empty=1`, `full=0` afterward (**spec §Ports; §Behavior 1**). Reset is not assumed to act asynchronously.
+- Accepted write = `wr_en && !full` **before** the edge; a write request at full is dropped. Accepted read = `rd_en && !empty` **before** the edge; a read request at empty is ignored (**§Behavior 2–3**). Both requests may be asserted together; those requests are **defined**, including at the boundaries.
+- When both requests are asserted with `0 < count < DEPTH`, both transfers occur and occupancy is unchanged (**§Behavior 4**). By the per-request acceptance rules, at **empty**, simultaneous requests accept only the write; at **full**, they accept only the read. The spec explicitly calls out both boundary combinations (**§Corner cases**).
+- After outputs settle, `full==(count==DEPTH)`, `empty==(count==0)` and `0<=count<=DEPTH` (**§Ports; §Behavior 5**). `rd_data` shows the **current head whenever not empty**; it is not checked while empty (**§Ports; §Behavior 3**).
+- **Bench timing (testbench choice, not a spec timing requirement):** run a 10 ns clock, drive inputs at falling edges, compute model acceptance using pre-rising-edge occupancy, then sample outputs 1 ns after the rising edge to allow sequential updates to settle. Sample pre/post states separately so a boundary request is not judged using post-edge flags.
 
-| ID | Requirement and specification reference | Priority | Tests/checks |
+**HW4 baseline available for reuse (not new Project 1 evidence):** `HW4.zip` contains `test_fifo.py` with `FifoDriver`, `FifoMonitor`, `FifoScoreboard`, and `FifoBench`; the imported `FifoModel` has now been reviewed against spec §Behavior 1–6. The three existing tests are `test_fifo_directed_corners`, `test_fifo_pointer_wrap_and_reset`, and `test_fifo_seeded_random_interleave` (1,200 `random.Random` cycles, seed `0x4701`). Its `FINDINGS.md` reports **3/3 passing tests and 8/8 released mutants detected** on Eustis/Icarus. These are **HW4 historical results**; they are **not** Project 1 pyvsc, functional-coverage, or mutation results. The HW4 model/testbench currently hardcode `WIDTH=8`, `DEPTH=8` and will require refactoring for parameter sweeps.
+
+## 2. Feature list
+
+`Req` references the **official** `dut/specs/fifo.md`. **H** means mandatory baseline signoff; **M** means supplemental/configuration coverage. `HW4` means the test exists in supplied HW4 source, not that we reran it during preparation of this plan.
+
+| ID | Feature / observable requirement | Req | Priority | Verification method |
+|---|---|---|---|---|
+| F01 | Synchronous low-active reset makes count zero, empty true, full false at the next rising edge; recovery after reset | §Ports (`rst_n`), §Behavior 1 | H | Initial and nonempty reset; scoreboard and reset checks (HW4 + extension) |
+| F02 | Accepted write stores a WIDTH-bit value and increments count by one when not full | §Ports (`wr_*`), §Behavior 2, 6 | H | Write-only, distinct patterns; queue comparison (HW4) |
+| F03 | Write requested while full is dropped without overflow/corruption | §Behavior 2; §Corner cases | H | Full-boundary writes followed by full drain (HW4 + coverage) |
+| F04 | Accepted read removes exactly the oldest queued value and decreases count by one when not empty | §Behavior 3, 6 | H | Read-only and head/queue checks (HW4) |
+| F05 | Read requested while empty is ignored without underflow | §Behavior 3; §Corner cases | H | Repeated empty reads, subsequent write/read recovery (HW4) |
+| F06 | Full and empty flags track occupancy correctly on every observed cycle | §Ports (`count`, `full`, `empty`), §Behavior 5 | H | Per-edge count + flag assertions; 0/1/7/8 boundaries (HW4) |
+| F07 | FWFT output continuously indicates the front element whenever not empty | §Ports (`rd_data`); §Behavior 3 | H | Compare post-edge valid head to queue; first write, pop, replace head (HW4) |
+| F08 | FIFO preserves ordering and stored data through all mixes of traffic | §Behavior 6 | H | Unique and edge-case patterns, burst/drain, queue scoreboard (HW4 + CRV) |
+| F09 | Simultaneous read+write at interior occupancy accept both and hold count | §Behavior 4 | H | Occupancy 1, middle, DEPTH−1; extended overlap sequences (HW4 + CRV) |
+| F10 | Simultaneous requests at empty accept write only; at full accept read only | §Behavior 2–3; §Corner cases | H | Targeted boundary crossed with both enables; post-edge count/head (HW4 + CRV) |
+| F11 | Idle cycles leave occupancy and valid data/flags stable | §Behavior 2–5 (no accepted transfer) | H | Idle at 0, middle, full; state stability checks (HW4 + extension) |
+| F12 | Correct behavior after repeated logical pointer wrap / full-depth fill-drain rounds | §Behavior 6; §Corner cases | H | Multi-revolution unique patterns and queue checks (HW4 + CRV) |
+| F13 | WIDTH/DEPTH parameterization retains specified behavior for selected supported configurations | §Parameters; §Ports; §Behavior 1–6 | M | Reconfigure and rerun spec-independent tests (new; do not claim until run) |
+| F14 | A control combination not explicitly specified during reset is recorded and safely analyzed | §Behavior 1 vs. no stated reset/input precedence | H | Observable `rst_n=0 && wr_en=1` coverpoint; check reset outputs only, log unspecified input effect (new) |
+
+**Scope boundary:** No test ID or coverage credit is assigned to nonexistent `almost_full` or non-FWFT controls. The spec lists WIDTH and DEPTH but does not state the admissible minimum or maximum values; proposed extra configurations require a separate, documented simulator run.
+
+## 3. Coverage model
+
+**Sampling, collection, and denominator.** Use `cocotb-coverage` for functional coverpoints/crosses; use `pyvsc` for a seeded transaction class. At each nonreset clock edge record pre-edge model occupancy, control requests, and predicted accepted operations; after the edge record post-edge outputs and check them against `FifoModel`. Sample reset cases separately. All specified requests are legal: **attempted writes at full, reads at empty, and both enables at either boundary are defined behavior**, not forbidden transactions. Track raw hit counts and compute percent as `hit reachable bins / total reachable bins` **for the selected parameter configuration**; print unhit bins and never count a bin solely because stimulus was attempted when no check was made.
+
+**Baseline bins for WIDTH=8, DEPTH=8:**
+
+| ID | Coverpoint | Bins | Reason / bug class |
 |---|---|---|---|
-| F01 | Synchronous reset and recovery; Ports/reset, Behavior 1 | H | T02, T05; pre/post-reset checks; C09, X05 |
-| F02 | Accepted write stores data and increments count; Behavior 2, 6 | H | T01, T03, T06; queue scoreboard |
-| F03 | Full write request is dropped; Behavior 2 | H | T01, T03, T06; X01/X02 full boundary |
-| F04 | Accepted read removes oldest entry; Behavior 3, 6 | H | T01-T03, T06; valid-head comparison |
-| F05 | Empty read request is ignored; Behavior 3 | H | T01, T03, T06; X01/X02 empty boundary |
-| F06 | Flags and count agree with occupancy; Ports, Behavior 5 | H | Every checked cycle; T04; C04/C05, X03 |
-| F07 | Valid FWFT head follows current oldest value; Ports, Behavior 3 | H | T01-T06; C06, X04 |
-| F08 | Data integrity and FIFO ordering; Behavior 6 | H | All queue checks, patterned data, final drain |
-| F09 | Interior simultaneous transfers hold occupancy; Behavior 4 | H | T01, T02, T03, T06; C03 and X01/X02 |
-| F10 | Boundary simultaneous requests accept only available operation; Behavior 2-3, Corners | H | T01, T06; X01/X02 |
-| F11 | Idle count, flags and valid head remain stable; Behavior 2-5 | H | T04, T06; C04/C06 |
-| F12 | Ordering remains correct through repeated wraps; Behavior 6, Corners | H | T02, T06; C10 and X04 |
-| F13 | Selected WIDTH/DEPTH configurations preserve behavior; Parameters | M | T07, separate configuration evidence |
-| F14 | Reset overlapping a write is observed and reset outputs checked; Behavior 1 | H | T05, T06; C11; no unsupported claim about accepted reset-time transfers |
+| C01 | **Pre-edge occupancy** | `empty=0`, `one=1`, `middle=2..6`, `near_full=7`, `full=8` | Boundary off-by-one, access gating, and state pressure |
+| C02 | **Requested operation** (`wr_en`, `rd_en`) | `idle=00`, `read=01`, `write=10`, `both=11` | Distinguish requested commands from accepted transfers |
+| C03 | **Accepted operation** (model-predicted) | `none`, `read_only`, `write_only`, `both` | Expose overflow/underflow suppression and overlap acceptance |
+| C04 | **Important occupancy transitions** | `0→1`, `1→0`, `7→8`, `8→7`, `hold_empty`, `hold_full`, `hold_interior` | Boundary timing, dropped operations, and count stability |
+| C05 | **Post-edge flag state** | `empty`, `interior`, `full` | Observe both assertion and deassertion of each flag |
+| C06 | **FWFT head event** | `first_write_from_empty`, `read_reveals_next`, `simultaneous_replaces_one_entry`, `idle_head_stable`, `head_after_wrap` | Head selection, stale data, and read/write pointer mistakes |
+| C07 | **Write data pattern** | `all_zero`, `all_one`, `alternating_55_or_AA`, `other` | Stuck bits, corruption, aliasing, and accidental equality |
+| C08 | **Consecutive request burst length** (track read/write separately) | `single`, `short=2..7`, `long>=8` | Uninterrupted reads/writes and long pointer histories |
+| C09 | **Reset scenario** | `initial_reset`, `reset_when_nonempty`, `post_reset_first_write` | Reset state, stale-head/pointer recovery |
+| C10 | **Independent logical wrap event** | `no_wrap`, `write_wrap`, `read_wrap`, `both_wrapped` | Detect depth/modulo mistakes; use scoreboard's transaction indices, **not** RTL internals |
+| C11 | **Undefined/underspecified control overlap** | `reset_only`, `reset_plus_write` | Meets security/trust requirement: reset coincident with write; observe/reset-check but do not invent unspecified behavior |
+| C12 | **Selected parameter configuration** | `8x8_baseline`; additional `WIDTHxDEPTH` bins **only if actually run** | Track configuration-specific reachability without inflating baseline percentage |
 
-| Test ID | Executable test or command | Pass condition |
+**Crosses (only reachable target combinations count):**
+
+| ID | Cross | Target set / why it matters |
 |---|---|---|
-| T01 | `tb/test_fifo.py::test_fifo_directed_corners` | Full/empty rejection, boundary/interior overlap and ordering pass |
-| T02 | `test_fifo_pointer_wrap_and_reset` | Repeated wraps, nonempty reset and recovery pass |
-| T03 | `test_fifo_seeded_random_interleave` | 1,200 cycles using Python seed `0x4701` and final drain pass; supplemental to pyvsc |
-| T04 | `test_fifo_idle_hold_and_flag_transitions` | Idle holds and 0→1, 1→0, 7→8, 8→7 transitions pass |
-| T05 | `test_fifo_synchronous_reset_with_requests` | Reset timing, asserted enables, and restart pass |
-| T06 | `crv/test_fifo.py::test_crv_seeded_regression` | pyvsc seeds 4701, 17, 4702; 5,000 cycles each; scoreboard, corner self-checks and coverage closure pass |
-| T07 | Same CRV with 16x5 and 8x4 parameters | Separate elaboration and 108-bin model close; scoreboard passes |
-| T08 | `python scripts/run_verification.py --suite mutations` | Passing clean controls; final baseline and CRV each detect all 8 released mutants; controlled restricted experiment has exactly the two predicted survivors |
-| T09 | `python scripts/run_verification.py --suite experiments` | Save measured 1/500 vs 1/200 reset-weight coverage checkpoints; no assumed improvement |
-| T10 | Unit checks and repeated seed 4701 in the regression runner | Correct temporal sampling and JUnit failure detection; identical full coverage JSON and stimulus hash on replay |
+| X01 | C01 pre-edge occupancy × C02 requested operation | **All 5 × 4 = 20 baseline combinations** are reachable; especially `both@empty`, `both@full`, `write@full`, `read@empty` |
+| X02 | C01 pre-edge occupancy × C03 accepted operation | **16 reachable baseline combinations:** 2 for empty (`none`,`write`), 4 for each of 1/middle/7, 2 for full (`none`,`read`); catches misgating |
+| X03 | C04 important transition × C05 post-edge flag state | Score only the expected pair for each transition: `0→1:interior`, `1→0:empty`, `7→8:full`, `8→7:interior`, and respective `hold_*` cases; catches flag/count latency |
+| X04 | C01 occupancy × C06 FWFT head event | Explicitly target `empty×first_write`, `one×simultaneous_replaces_one_entry`, `interior×read_reveals_next`, and `interior/near_full×head_after_wrap`; catches head selection under pressure |
+| X05 | C09 reset scenario × first subsequent accepted operation | `initial_reset→write`, `reset_when_nonempty→write`, `post_reset_first_write` witness; guards against stale state after reset |
 
-## 3. Functional coverage model
+**Illegal / ignore bins and specification authority.** The written spec defines **no prohibited `wr_en`/`rd_en` combinations** in normal operation. Therefore do **not** declare full writes, empty reads, or boundary `both` requests illegal or exclude them from request coverage. States with `count<0`, `count>DEPTH`, `full && empty` for DEPTH>0, or flags inconsistent with count are **failures to assert/check**, not bins to excuse from coverage. Ignore comparison of `rd_data` when `empty=1` because its valid-data contract is limited to `!empty` (**§Ports; §Behavior 3**). Reset with a write request is covered as an underspecified control overlap: assert the *specified* reset count/flags but do not assume the spec defines write acceptance on that edge. For other depths, regenerate occupancy/transition bins; do not demand a nonexistent middle range for very small DEPTH.
 
-The model is [`coverage/fifo_coverage.py`](coverage/fifo_coverage.py). Every selected configuration has **108 required bins**, with target 108/108. A bin receives credit only after its associated observation has passed the scoreboard. The initial reset is sampled at cycle 0; subsequent random/reset edges and the final drain are sampled. The random-only snapshot is preserved separately from the deterministic drain.
+**CRV strategy and convergence evidence.** Define a pyvsc transaction with `wr_en`, `rd_en`, and WIDTH-bit `wr_data`; constrain bit widths, and bias the **sequence according to model occupancy** rather than treating transactions independently. Initial proposed phases: write-heavy to reach near-full/full, read-heavy to reach near-empty/empty, overlap-heavy to maintain active occupancy, and balanced traffic for interleavings. Retain legal boundary requests because the spec defines their ignored/dropped outcomes. Use saved seeds (initial proposal `0x4701`–`0x4705`; Project 1 pyvsc seeds are **not yet run**), monitor empirical probabilities by phase, and add directed closure only when a corner cannot reasonably be reached by tuned constraints. For each run, record before/after hit counts, uncovered bins/crosses, changed weights/constraints, observed stimulus distribution, and which mutants new coverage detects. Sample all monitored cycles including post-random drain; label directed-only closure honestly. Target **100% reachable mandatory baseline bins and crosses** with no undiagnosed holes.
 
-| ID | Coverpoint | Bins |
-|---|---|---|
-| C01 | Pre-edge occupancy | empty=0, one=1, middle=2..DEPTH-2, near_full=DEPTH-1, full=DEPTH |
-| C02 | Requested operation | idle, read, write, both |
-| C03 | Predicted accepted operation | none, read_only, write_only, both |
-| C04 | Key occupancy transition | empty_to_one, one_to_empty, near_full_to_full, full_to_near_full, hold_empty, hold_full, hold_interior |
-| C05 | Observed post-edge flags | empty, interior, full |
-| C06 | Checked head event | first_write_from_empty, read_reveals_next, simultaneous_replaces_one_entry, idle_head_stable, head_after_wrap |
-| C07 | Accepted write pattern | all_zero, all_one, alternating, other |
-| C08 | Consecutive requested write/read burst, separately | single=1, short=2..DEPTH-1, long>=DEPTH |
-| C09 | Reset/recovery scenario | initial_reset, reset_when_nonempty, post_reset_first_write |
-| C10 | Logical pointer event/milestone | no_wrap, write_wrap, read_wrap, both_wrapped |
-| C11 | Reset/control overlap | reset_only, reset_plus_write |
-| C12 | Selected elaboration configuration | one bin for the actual WIDTHxDEPTH of this process |
+## 4. Test matrix
 
-`read_reveals_next` requires a pre-edge count of at least two and an accepted read. `head_after_wrap` requires an accepted read that completes a logical read-index revolution and a nonempty post-state; the resulting head has already been checked. The logical indices restart on reset. **`both_wrapped` means both indices have completed at least one revolution since the last reset, possibly on different edges.** It does not mean they wrap simultaneously, which is unreachable for accepted operations in this FIFO. Its first occurrence per reset epoch is sampled. `no_wrap` means neither index wraps on this transaction.
+Every feature in §2 maps to a test below. Existing HW4 names refer to the source supplied in `HW4.zip`, **not** new Project 1 passes. Each test must fail on scoreboard discrepancies and record seed/command/configuration.
 
-Two additional `recovery_origin` bins identify initial versus nonempty reset for X05. Combined counts: 50 coverpoint bins and 58 cross bins = 108.
+| Test | Mapped features | Kind / implementation | Pass criterion |
+|---|---|---|---|
+| T01 `test_fifo_directed_corners` | F02, F03, F04, F05, F06, F07, F08, F09, F10, F11 | Directed — **reuse HW4** | Drops full writes, ignores empty reads, handles boundary and interior both; all count/flag/valid-head checks pass |
+| T02 `test_fifo_pointer_wrap_and_reset` | F01, F06, F07, F08, F11, F12 | Directed — **reuse HW4** | Repeated wraps and nonempty reset preserve ordered output and restore empty state |
+| T03 `test_fifo_seeded_random_interleave` | F02, F03, F04, F05, F06, F07, F08, F09, F10, F11, F12 | Python pseudo-random — **HW4 baseline only** | Old 1,200-cycle sequence (seed `0x4701`) passes and final drain exposes no stale/corrupted entries; **does not satisfy pyvsc requirement** |
+| T04 pyvsc transaction legality and seed test | F02, F03, F04, F05, F09, F10 | CRV — **new** | Reproducible transaction generation; all control requests are within spec and data in `0..2^WIDTH-1`; observed distribution reported |
+| T05 occupancy-weighted boundary regression | F02, F03, F04, F05, F06, F09, F10, F11 | Seeded CRV — **new** | All X01/X02 reachable occupancy/operation combinations hit and checked, including boundary overlap |
+| T06 sustained simultaneous traffic and head updates | F06, F07, F08, F09, F12 | Seeded CRV — **new** | Both accepted at occupancy 1/interior/7, count holds, head and ordering correct over long bursts |
+| T07 data integrity and wrap stress | F02, F04, F07, F08, F12 | CRV + directed — **new/extend** | Edge/alternating/distinct data survive full FIFO fills, drains, and repeated wraps |
+| T08 reset timing/recovery/underspecified overlap | F01, F06, F07, F14 | Directed + assertion/cover — **new/extend** | Observe reset on a rising edge, nonempty reset and postreset restart; record `rst_n=0 && wr_en=1` hit; assert only specified reset results |
+| T09 idle, FWFT, and flag-transition coverage | F06, F07, F08, F11 | Directed/coverage — **new** | Witness all specified C04/C05 transitions and key C06 head events without unverified head checks at empty |
+| T10 additional parameter configurations | F02, F04, F06, F07, F08, F12, F13 | Parameter regression — **planned** | If runner supports it, e.g. `WIDTH=16,DEPTH=5` and/or `WIDTH=8,DEPTH=4`; rerun with parameterized scoreboard and separate coverage/report; do not claim runs in advance |
+| T11 released mutation-quality run | All applicable F01–F14 | Mutation — **new Project 1 measurement** | Clean DUT passes, released found/total recorded with current commit and command, causes of surviving mutants analyzed honestly |
+| T12 coverpoint/cross convergence regression | All applicable F01–F14 | Coverage closure — **new** | 100% reachable mandatory baseline target hit and checked; each initial hole has a recorded closure action and evidence |
 
-| ID | Cross | Reachable bins and exclusions |
-|---|---|---|
-| X01 | Occupancy × requested operation | All 5×4=20 combinations; boundary requests remain included |
-| X02 | Occupancy × accepted operation | 16 combinations; ignore empty×read_only/both and full×write_only/both because the spec prevents them |
-| X03 | Key transition × observed post-state flags | 7 combinations; each transition has exactly one valid flag state |
-| X04 | Occupancy × checked head event | 13 combinations: first write only at empty; replacement only at one; reveal-next at middle/near-full/full; idle-head and head-after-wrap at any nonempty occupancy |
-| X05 | Reset origin × first subsequent accepted operation | 2 combinations: each reset origin followed by write_only; an empty reset queue cannot accept a read before its first write |
+**Reproducible known HW4 commands (reconfirm with current course runner):**
 
-No normal request combination is illegal. Count outside 0..DEPTH, inconsistent flags, unresolved required values and incorrect valid-head data are assertion failures, not ignored bins. Reset-plus-write meets the control-corner requirement while asserting only the specified reset state. The absence of an empty-state data promise is not used to excuse errors when the FIFO should be nonempty.
+```bash
+cd ~/craft-vv-student/code
+source /opt/course/cocotb-env/bin/activate
+just test fifo icarus
+just mutate fifo
+```
 
-## 4. Constraints, distribution and convergence
+The HW4 report indicates the default Verilator invocation stopped on an existing width warning, while the **explicit Icarus** invocation passed. Use the actual Project 1 runner and saved parameters when generating new evidence; do **not** substitute HW4 scores for the new Project 1 results.
 
-The transaction keeps live pre-edge occupancy and fill/drain phase as nonrandom state. Before each solve, that state selects nonrandom write/read weight values used by one unconditional distribution constraint per enable. Each enable is one bit, data is WIDTH bits, and all specified boundary requests remain enabled in normal mode. Default request weights are:
+## 5. Risk and spec ambiguity
 
-| Rule | Condition, in precedence order | P(write request) | P(read request) |
-|---|---|---:|---:|
-| near_empty | count<=1 | 0.70 | 0.60 |
-| near_full | count>=DEPTH-1 | 0.60 | 0.70 |
-| fill | interior and fill phase | 0.90 | 0.30 |
-| drain | interior and drain phase | 0.30 | 0.90 |
+| # | Ambiguity or risk | Where in source | Resolution / residual risk |
+|---|---|---|---|
+| R01 | **Handout/interface mismatch:** handout mentions `almost_full` and optional FWFT, but supplied FIFO exposes neither | Project 1 handout, DUT `fifo.sv` module ports and parameters, `dut/specs/fifo.md` | **Resolved for this DUT:** verify fixed FWFT only; `almost_full` and non-FWFT excluded. Ask instructor if a *different* Project 1 DUT is expected |
+| R02 | Reset precedence for `wr_en`/`rd_en` asserted during `rst_n=0` is not specified beyond reset outputs | Spec §Behavior 1 vs §Behavior 2–3 | Test/cover the overlap for trust purposes; assert count/flags on reset edge; document write/read acceptance as undefined pending clarification |
+| R03 | WIDTH/DEPTH bounds are not documented; narrow DEPTH could expose zero-width pointer declarations | Spec §Parameters; DUT uses `$clog2(DEPTH)` | Run default 8×8 first; choose supported extra values (prefer DEPTH≥2, nonpower-of-two DEPTH=5 if allowed), then report exact configurations. **Do not assume DEPTH=1 is supported** |
+| R04 | Existing bench constants and model instantiation are hardcoded 8×8 | HW4 `test_fifo.py` (`WIDTH`, `DEPTH`, `FifoScoreboard`) | Refactor before T10; all bins and scoreboard sizes must follow the actual simulator parameter override |
+| R05 | HW4 randomized traffic uses `random.Random` rather than pyvsc; no functional coverage closure report exists | HW4 `test_fifo.py` | Add real pyvsc generator, cocotb-coverage, saved seeds, empirical distribution, and convergence logs |
+| R06 | Existing scoreboard may miss bugs that require different sampling moments or observing unexposed internals | HW4 monitor samples rising edge+1 ns; spec only defines valid head | Explicitly document sampling; maintain expected observable outputs per edge; avoid claims of glitch/internal verification |
+| R07 | HW4 **final** released-pool mutation results have **zero survivors**, while Project 1 requests analysis of at least two survivors | HW4 `FINDINGS.md` vs Project 1 §Tasks 5 | Rerun current Project 1 pool; honestly report actual final survivors. If still 0, analyze **two historical starter-suite survivors** with before/after evidence (e.g. `rd_data_wrptr`, `wrptr_wrap_early`) and label them **formerly surviving**, not final surviving; confirm this treatment with instructor if needed |
+| R08 | Default Verilator path previously failed to compile due to width warning; Icarus path passed | HW4 `FINDINGS.md` | Save simulator choice/version and exact invocation; fix environment/build problems separately from actual functional verification failures |
+| R09 | Randomization may neglect rare occupancy transitions or correlated bursts despite many total cycles | Project 1 §Tasks 3–4 | Coverage-guided weights, seeded phases, focused crosses, reported holes and empirical distribution; directed-only bins separately identified |
+| R10 | Team merges or stale test logs might make evidence irreproducible | GitHub team workflow | Single approved integration branch, all teammates commit, peer-review behavior changes, save SHA+seed+simulator+commands and write `CONTRIBUTIONS.md` |
 
-These are configured marginal weights, not a promise of exact finite-sample proportions. Normal signoff requires at least 100 observations per rule and checks each observed request rate within six binomial standard errors plus two percentage points of its target; the data-category rates are checked the same way. This is a regression diagnostic, not a proof of solver uniformity. The phase reverses at a reached full/empty boundary. A nonempty reset can also end a drain phase, so `drains` is a phase-completion count, not a claim that every phase removed every word by reading.
+**Mutation-analysis plan.** Keep baseline and mutation results distinct. The uploaded HW4 `FINDINGS.md` reports a weak *starter suite* at **1/8**, leaving seven mutants, and a stronger final HW4 suite at **8/8**, leaving none. Historical examples: `rd_data_wrptr` needs a valid FWFT head comparison with distinct values, and `wrptr_wrap_early` needs multi-round wraparound and ordering checks. These **were detected** by the finished HW4 suite. Project 1 should save a genuine current initial-vs-improved comparison and analyze at least two actually observed survivors from a weaker/initial run, or disclose that the final regression has no survivors. Never fabricate survivor names, results, or new mutation scores.
 
-Data categories are selected with weights 1:1:1:1:6 for zero, all-one, alternating A, alternating B, and other. Thus their expected request frequencies are 10%, 10%, 10%, 10%, and 60%; C07 combines the two alternating categories. Other values exclude all four named constants. This explicit selection keeps alternating patterns reachable at WIDTH=16. Accepted-write frequencies can differ from generated-request frequencies.
+## 6. Closure criteria
 
-Reset has probability 0 at empty and configured weight 1/200 when nonempty. The convergence experiment compares 1/500 with 1/200 using the same seed and cycle budget. The report stores first-hit cycles, every 100-cycle checkpoint, all remaining holes, per-rule request counts, pattern counts and reset-eligible cycles. [`coverage/README.md`](coverage/README.md) explains the measured outcome. No result from a different source version substitutes for current evidence.
+- **Functional coverage:** Reach **100% of reachable, applicable mandatory baseline coverpoint and cross bins** defined in §3 for `WIDTH=8`, `DEPTH=8`, with hit counts and each coverage hole/closure action reported. Excluded/unreachable combinations require a spec or logical justification. Optional configuration bins count only after execution and are reported separately.
+- **Scoreboard and correctness:** Every nonreset transaction is checked against spec-derived `FifoModel` behavior for occupancy/flags and valid FWFT head; reset count/flags checked after the reset clock edge; queue ordering and all acceptance rules checked. All baseline and added tests must pass locally.
+- **Mutation quality:** Team goal **≥90%** detection (`found/total`) on the currently released pool. The Project 1 grading contract awards full mutation-quality credit at 90% on the *hidden* pool, whose outcome is not available before grading. Preserve raw mutant statuses, exact commands, and a frank analysis of **at least two documented initial/current survivors**; if final released survivors are zero, state so.
+- **CRV legality and reproducibility:** The suite uses `pyvsc` (not only Python's `random`), logs the constraints, predicted/observed generation distribution, seeds, simulator, parameter settings, commit hash, and any hole-closing adjustments. Same commit/seed/commands reproduce test and coverage results.
+- **Security/trust check:** At least one observable, exercised `reset_plus_write` coverpoint or equivalent control-corner assertion; distinguish the specified reset output guarantees from unspecified simultaneous command acceptance. No vacuous assertion claims.
+- **Report and artifacts:** Team repository contains `vplan.md`; layered `tb/` (driver, monitor, reference-queue scoreboard); `crv/` (pyvsc transactions/constraints/seeded regression); functional coverage model **and measured report**; `FINDINGS.md` (found/total, survivors, limitations); `REPORT.pdf` (4–6 pages); demo link; `CONTRIBUTIONS.md` (every teammate's actual work/commits); and `ai_log.md`. Required checks green locally before submitting via Webcourses.
+- **Check the Machine / AI evaluation:** `ai_log.md` records an AI prompt for coverage or constraints, **a prediction written before execution** about missing cross/illegal behavior/distribution, the actual measured evidence, and every correction. A generated vplan alone does not fulfill this requirement.
+- **Honest residuals:** The report explicitly lists unrun parameter choices, unclosed bins, surviving mutants, any specification uncertainties, and unsupported features (`almost_full`, non-FWFT). No historical HW4 result or projected percentage is presented as a new Project 1 measurement.
 
-The `restricted` mode deliberately forbids empty reads and full writes for the two-survivor experiment. It is explicitly diagnostic, requires closure checking to be disabled, and is never used for normal signoff.
-
-## 5. Reproducibility and acceptance
-
-Run `python scripts/run_verification.py --output evidence/generated`. It checks the five-test baseline, three CRV seeds, exact same-seed replay, two supplemental configurations, sampler/result-parser unit checks, convergence experiments and released mutation controls. It reads JUnit results instead of assuming a zero `make` exit means passing tests. Each case uses a fresh build and separate results/coverage files. Missing results, skips, infrastructure errors, functional failures, incomplete normal coverage and unexpected survivors make the runner exit nonzero.
-
-Each manifest records exact commands, environment versions, the starting commit and SHA-256 hashes of the actual verification source files. The code hash identifies the tested source even when evidence is generated before the final documentation commit. Compare manifests before comparing scores.
-
-## 6. Residual risk and submission boundary
-
-The hidden pool is unavailable; an 8/8 released score does not establish its outcome. Finite seeded tests cannot prove every data history or parameter choice. Outputs are checked at specified sampling points; subcycle glitches are not exhaustively monitored. Undefined empty-state data and unspecified transfer acceptance on reset remain outside asserted semantics.
-
-The repository work includes current findings, contributions, AI evaluation, coverage evidence and reproducible commands. The team report PDF and demo link are separate deliverables that the owner is completing; the README tracks them explicitly. Team members should understand and defend the recorded evidence; no human-review attestation is inferred from an automated run.
+**Team review gate:** [ ] all team members reviewed this vplan  [ ] test IDs linked to assigned owners  [ ] parameter regression feasibility checked on Eustis  [ ] pyvsc and coverage installed  [ ] first coverage/mutation baseline captured.

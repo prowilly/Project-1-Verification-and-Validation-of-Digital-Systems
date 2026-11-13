@@ -1,67 +1,113 @@
-# Project 1 — Check the Machine and AI assistance log
+# Project 1 AI Log
 
-## 1. Original team experiment
+**Group Members:** Daniel Jo\
+**Section:** EEE 4701\
+**Week:** Project 1 — Constrained Random Stimulus\
+**Autonomy tier:** self-directed\
+**Assistant used:** a general-purpose frontier
+assistant, web interface, November 2026
 
-Daniel Jo's original prompt, predictions, reported output and correction list are preserved unchanged in [`evidence/history/ai_log_initial.md`](evidence/history/ai_log_initial.md), from commit `2aff308`. The original prompt was:
+---
+
+## 1. Task
+
+The machine was asked to generate a pyvsc transaction class with a block of constraints for a synchronous FIFO (width 8, depth 8) to test specific corner cases without generating illegal transactions.
+
+**Prompt (verbatim):**
 
 ```text
 Write a `pyvsc` transaction class for a synchronous FIFO (width=8, depth=8). Include constraints that ensure every transaction is legal (no writing when full, no reading when empty). Add constraints to specifically stress the near-full and near-empty occupancy corners, empty reads and over writes, and simultaneous read and write operations. The constraints should induce a distribution that hits these corners frequently over a 3000-cycle test.
 ```
 
-The original record predicted a live-state/legality problem and missed full-boundary overlap, and reported 6/8 released detections with `ignore_full` and `ignore_empty` surviving. That is historical reported evidence, not the current suite's score. Its shown mutation output does not by itself establish a solver contradiction, and the exact old generated source/seed is not present in that record.
+---
 
-**Correction to the interpretation:** the written FIFO specification permits full-write and empty-read requests and defines their dropped/ignored outcomes. Those requests are not illegal transactions. The prompt's parenthetical legality definition over-constrains the stimulus and conflicts with its requested boundary tests. Likewise, off-by-one/pointer detections do not prove that the full-boundary simultaneous cross was hit; that requires actual coverage evidence.
+## 2. Before
 
-## 2. Completion request and before-run predictions
 
-On November 13, William requested:
+**Prediction 1 —** The AI will generate illegal transactions because the pyvsc class won't have access to the live FIFO state, like the full or empty flags.
+*Evidence that would show it:* A pyvsc.RandomizationError in the console or a gtkwave waveform showing a write occurring while the FIFO is already full.
 
-```text
-Complete everything besides the REPORT.pdf and demo link. Push them to the github and update the README on the front page when it's done.
+**Prediction 2 —** The AI will fail to generate stimulus that reaches the complex corner case of simultaneous reads and writes exactly at the full boundary.
+*Evidence that would show it:* The cocotb-coverage report will show a 0% hit rate for the cross coverage of the full flag with simultaneous rd_en and wr_en.
+
+**Review criteria I am checking against:**
+
+1. Constraints keep every transaction legal according to the synchronous FIFO specification.
+2. Constraints successfully stress near-full, near-empty, and simultaneous read/write corners.
+3. The generated code uses correct pyvsc syntax and integrates cleanly into a layered cocotb environment.
+
+
+---
+
+## 3. After
+
+
+**What I ran:**
+
+```bash
+just test fifo icarus
+just mutate fifo
 ```
 
-ChatGPT/Codex drafted the missing coverage and constraint changes as part of that request. Before running those new changes, the assistant recorded predictions in [`evidence/ctm_pre_run.md`](evidence/ctm_pre_run.md). These predictions are explicitly assistant-authored, not retroactively attributed to a teammate.
+**Raw output:**
 
-| Prediction | Measured outcome | Assessment |
-|---|---|---|
-| Suppressing legal boundary requests should leave `ignore_full` and `ignore_empty` alive; restoring them should detect 8/8. | Restricted experiment: 6/8 with exactly those two survivors. Final baseline and CRV: 8/8 each. | Confirmed by separate clean controls and released runs |
-| A simultaneous accepted-pointer-wrap bin would be unreachable; a temporal both-wrapped-since-reset milestone is needed. | Focused sampler test observes adjacent-edge wraps, one temporal milestone, and clearing of logical indices on reset. | Corrected model verified |
-| Reset recovery must be recorded on the later first accepted write, not merely on the reset edge. | Unit sequence proves empty reads do not close the recovery cross; both reset origins close on actual later accepted writes. | Verified |
-| Finite prefixes will leave holes; increasing reset frequency may change closure time and must be measured. | Same seed/configuration: 1/500 closes at 1031; 1/200 at 400; both reach 108/108. | Improvement measured for this seed only |
+```text
+python -m craft_mutate.mutate --tb tb/fifo --pool tb/fifo/mutants_released.yaml --sim icarus
+[baseline] running clean fifo.sv through fifo ...
+  clean RTL: 1 tests passed.
 
-## 3. Unexpected distribution problem and every completion fix
+  [found   ] full_offbyone        (test-failed)  -- full asserts one entry too early (cnt == DEPTH-1)
+  [found   ] empty_offbyone       (test-failed)  -- empty asserts one entry too early (cnt == 1)
+  [SURVIVED] ignore_full          (passed)       -- writes are accepted even when full (overflow)
+  [SURVIVED] ignore_empty         (passed)       -- reads are accepted even when empty (underflow)
+  [found   ] count_wr_dec         (test-failed)  -- a write-only cycle decrements the count
+  [found   ] rd_data_wrptr        (test-failed)  -- rd_data reads from the write pointer instead of the read pointer
+  [found   ] mem_corrupt          (test-failed)  -- stored data is corrupted (+1) on write
+  [found   ] wrptr_wrap_early     (test-failed)  -- write pointer wraps one slot early
 
-A newly instrumented run closed coverage while failing to generate the intended per-rule bias. Fill-phase writes measured 61.07% rather than 90%, and drain-phase reads measured 62.10% rather than 90%. This was not predicted in the before-run note. The prior constraints, full prior CRV source, output and source manifest are preserved in [`pre_distribution_fix/`](evidence/history/pre_distribution_fix/).
+==== found/total = 6/8 = 75.0% (threshold 90%) ====
+surviving mutants: ignore_full, ignore_empty
+```
 
-The completion changes were:
+**The number:** 6/8, 75% mutation score
 
-1. Replaced the guarded per-branch enable distributions with one unconditional distribution per enable, using nonrandom weights selected from live queue occupancy and phase before each solve. Added measured per-rule rate assertions, so passing functional checks cannot conceal the same bias error.
-2. Made data-pattern selection explicit (zero, all-one, two alternating patterns, other) so the wider 16-bit regression can reach the promised data bins. Checked generated category frequencies as well as accepted-write coverage.
-3. Added the missing C05/C06/C09/C12 and X03-X05 model elements, completed C10 with a reachable temporal definition, sampled initial reset/recovery and the final drain, and based flag coverage on actual checked observations.
-4. Removed the silent optional-coverage import path. Normal runs now fail on coverage holes. The only closure-disabled modes are explicitly labeled convergence/mutation diagnostics.
-5. Added a reproducible runner with fresh build/results directories, XML pass/fail parsing, exact source hashes, tool versions, same-seed comparison and measured parameter elaborations. Unit checks reject missing/empty XML and detect assertion, error and skip records.
-6. Added the intentionally weakened boundary-request constraint mode only for the controlled two-survivor experiment. The ordinary suite keeps all specified request combinations enabled.
-7. Turned unresolved required signal values into clear monitor assertions, retained unspecified empty-data handling, and replaced outdated planning/status documents with current measured findings and honest contributions.
+**Against each prediction:**
 
-All these changes and the preserved initial record are disclosed; no synthetic score or unexecuted measurement is presented as a run.
+| # | Predicted | Observed | Verdict |
+|---|-----------|----------|---------|
+| 1 | The AI will generate illegal transactions or fail randomization because the transaction class lacks live FIFO state synchronization. |The AI incorrectly randomized occupancy and caused solver contradictions at boundaries, prevented testing overflow/underflow, leaving 2 mutants surviving. | confirmed |
+| 2 | The AI will fail to generate stimulus that reaches complex boundary corner cases (simultaneous read/write at the full boundary). | The distribution successfully caught the off-by-one and pointer-wrap mutants. However, it explicitly blocked simultaneous read/writes at the full boundary to maintain strict legality. | partly |
 
-## 4. After-run evidence
+**Anything I did not predict:** \
+1. SystemVerilog-to-Python API Hallucinations: The AI struggled with the specific Python verification library API, mixing it up with SystemVerilog concepts. It imported the wrong module name, treated constrained random fields like standard variables, improperly formatted the distribution weights, and incorrectly nested the distribution function.
+2. Every fix made to the AI's output:
 
-The final regression passes the five-test baseline, three 5,000-cycle CRV seeds, exact replay, two supplemental WIDTH/DEPTH configurations and three focused unit checks. Every final normal coverage report reaches 108/108, before deterministic final draining. See [`regression/summary.json`](evidence/current/regression/summary.json).
+     -Corrected the library import statement.
 
-Final seed-4701 request rates are:
+     -Changed the FIFO occupancy tracker from a randomized variable to a state attribute that syncs with the testbench scoreboard before each cycle.
 
-| Rule | Samples | Target write | Observed write | Target read | Observed read |
-|---|---:|---:|---:|---:|---:|
-| near_empty | 1401 | 70% | 69.88% | 60% | 59.74% |
-| near_full | 1283 | 60% | 59.94% | 70% | 69.60% |
-| fill | 1192 | 90% | 89.43% | 30% | 28.02% |
-| drain | 1124 | 30% | 30.16% | 90% | 90.30% |
+     -Replaced standard Python conditional statements with the library's required conditional constraint blocks.
 
-Full counts, data-pattern distribution, reset observations, hole timelines and limitations are in [`coverage/README.md`](coverage/README.md). Current mutation evidence and both survivor analyses are in [`FINDINGS.md`](FINDINGS.md). The shared verification-source hash is `5351bff7374d0b2c614c479b728d1c2e1b5642a7b888c7ed8823ff9b6a2dce42`.
+     -Restructured the weighted distribution block to use the correct API format for the constraint solver.
 
-## 5. Takeaway and attribution
+     -Cast the randomized transaction fields to standard integers before passing them to the physical simulation driver.
 
-Verify a claimed stimulus distribution with counts, and verify a claimed coverage model with reachability and sampling checks. Passing the clean design or achieving 100% of an incomplete model is insufficient. Full-write and empty-read requests are essential specified cases; excluding them creates demonstrable reachability gaps.
+---
 
-The assistant wrote the completion changes and executed the saved automated checks at William's request. The original team contributions remain attributed through git history. This log does not attest that teammates independently reran or reviewed the completion results during this session. The report PDF and demo remain outside this completion task.
+## 4. Takeaway
+
+
+**The class of failure (or of success):** Library API hallucination (mixing up hardware verification languages) combined with contradictory prompt requirements that caused solver contradictions.
+
+**Where it connects:** Constrained-Random Verification (CRV) solver satisfiability and Mutation Analysis. Over-constraining the stimulus to generate only "strictly legal" transactions creates observability blind spots, preventing the test from evaluating the FIFO's overflow and underflow protection.
+
+**What I would change in how I framed the request:** Instead of simultaneously asking the AI to keep all transactions strictly legal while also asking it to test illegal over-writes and empty reads, I would explicitly ask for a parameterized constraint mode that allows a small, controlled percentage of illegal boundary transactions.
+
+---
+
+## Disclosure
+
+- [x] Every prompt above is verbatim and complete.
+- [x] I have marked every edit I made to the generated output.
+- [x] The tool is described by class, not by product name.
+- [x] Section 2 was written before the prompt was sent.
