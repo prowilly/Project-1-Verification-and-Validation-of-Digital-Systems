@@ -23,10 +23,18 @@ from cocotb.triggers import Timer
 from fifo_bench import FifoBench
 from fifo_types import FifoTransaction
 
+try:                                   # functional coverage (coverage/); records only
+    from fifo_coverage import FifoCoverage
+except ImportError:                    # coverage/ not on the path -> run without it
+    FifoCoverage = None
+
 WIDTH = int(os.environ.get("WIDTH", "8"))
 DEPTH = int(os.environ.get("DEPTH", "8"))
 SEED = int(os.environ.get("SEED", "4701"), 0)
 N_CYCLES = int(os.environ.get("N_CYCLES", "5000"))
+# STIM=biased (default, graded) | uniform (bias + data constraints OFF; used only
+# as the "before" baseline for the coverage convergence argument)
+STIM = os.environ.get("STIM", "biased")
 
 FILL, DRAIN = 0, 1
 
@@ -85,7 +93,9 @@ class FifoTxn:
         with vsc.if_then(self.count == 0):
             self.rst == 0
         with vsc.else_then:
-            vsc.dist(self.rst, [vsc.weight(1, 1), vsc.weight(0, 499)])
+            # 1/200 (tuned from HW5's 1/500): closes the reset coverage bins
+            # 2-3x sooner across seeds; see coverage convergence notes.
+            vsc.dist(self.rst, [vsc.weight(1, 1), vsc.weight(0, 199)])
 
 
 # ----------------------------------------------------------------------------
@@ -149,9 +159,13 @@ async def test_crv_seeded_regression(dut):
     bench = await FifoBench.start(dut, width=WIDTH, depth=DEPTH)
     model = bench.scoreboard.model
     cov = StimCoverage(DEPTH)
+    fcov = FifoCoverage(depth=DEPTH, width=WIDTH) if FifoCoverage else None
 
     random.seed(SEED)                          # pyvsc draws from stdlib random
     txn = FifoTxn(width=WIDTH, depth=DEPTH)
+    if STIM == "uniform":
+        txn.boundary_bias_c.constraint_mode(False)
+        txn.data_c.constraint_mode(False)
     phase, fills, drains = FILL, 0, 0
 
     for i in range(N_CYCLES):
@@ -161,6 +175,7 @@ async def test_crv_seeded_regression(dut):
         wr, rd = int(txn.wr_en), int(txn.rd_en)
         data, rst = int(txn.wr_data), int(txn.rst)
         cov.record(model.count, wr, rd, rst)
+        occ_pre = model.count
 
         label = f"seed={SEED} crv#{i}"
         if rst:
@@ -168,8 +183,14 @@ async def test_crv_seeded_regression(dut):
             # the reset+write security/trust corner (spec defines only the
             # reset outputs, which FifoBench.reset() checks).
             await bench.reset(wr_en=wr, rd_en=rd, wr_data=data)
+            if fcov:
+                fcov.sample_reset(occ_pre, wr)
         else:
             await checked_cycle(bench, FifoTransaction(wr, rd, data), label)
+            if fcov:
+                acc_wr, acc_rd = bench.scoreboard.last_acceptance
+                fcov.sample_cycle(occ_pre, wr, rd, data, acc_wr, acc_rd,
+                                  model.count)
 
         # Sweep direction flips at the boundaries so we fill and drain fully.
         if phase == FILL and model.full:
@@ -185,4 +206,6 @@ async def test_crv_seeded_regression(dut):
     dut._log.info(f"CRV seed={SEED} cycles={N_CYCLES} fills={fills} drains={drains}")
     dut._log.info(f"CRV occupancy histogram  {hist}")
     dut._log.info(f"CRV events  {dict(sorted(cov.events.items()))}")
+    if fcov:
+        fcov.report(dut._log, SEED)            # writes coverage/coverage_report.*
     cov.assert_reached(fills, drains)

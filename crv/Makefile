@@ -12,9 +12,10 @@ MODULE   = test_fifo
 
 SEED     ?= 4701
 N_CYCLES ?= 5000
-export SEED N_CYCLES
+STIM     ?= biased
+export SEED N_CYCLES STIM
 
-# tb/ (driver/monitor/scoreboard/bench), lib/ (FifoModel)
-export PYTHONPATH := $(CURDIR):$(CURDIR)/../tb:$(CURDIR)/../lib:$(PYTHONPATH)
+# tb/ (driver/monitor/scoreboard/bench), lib/ (FifoModel), coverage/ (coverage model)
+export PYTHONPATH := $(CURDIR):$(CURDIR)/../tb:$(CURDIR)/../lib:$(CURDIR)/../coverage:$(PYTHONPATH)
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
