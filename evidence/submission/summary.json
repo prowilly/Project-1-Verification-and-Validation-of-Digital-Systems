@@ -1,0 +1,120 @@
+{
+  "archive_sha256": "a653eefc9e465475af08ded6aab49442e46519e5cfa06a55373f0e4ba5e3d6e9",
+  "document_checks": "passed",
+  "found": 8,
+  "grader_note": "Local checks match the screenshot requirements; the external course checker was not available.",
+  "layout_checks": "passed",
+  "protected_files_unchanged": true,
+  "runs": [
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 0,
+      "name": "clean",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "full_offbyone",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "empty_offbyone",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "ignore_full",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "ignore_empty",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "count_wr_dec",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "rd_data_wrptr",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "mem_corrupt",
+      "status": "detected",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "SIM=icarus",
+        "SEED=4701",
+        "N_CYCLES=5000"
+      ],
+      "failed": 1,
+      "name": "wrptr_wrap_early",
+      "status": "detected",
+      "tests": 1
+    }
+  ],
+  "test_module": "test_fifo.py",
+  "total": 8
+}

@@ -20,4 +20,4 @@ python scripts/run_verification.py --output evidence/generated
 
 The runner never runs simulations inside the tracked `crv/` or `coverage/` directories. It copies source files into a fresh temporary workspace for every case, collects generated reports under the requested output, and verifies that the protected originals remain unchanged. `coverage/coverage_report.yml` remains Banmeet's original report; new reports are stored here separately.
 
-See [`FINDINGS.md`](../FINDINGS.md) for results, convergence, survivor analysis and limitations.
+See [`FINDINGS.md`](../FINDINGS.md) for mutation results, survivor analysis and limitations, and [`closure.md`](../closure.md) for coverage convergence. Standalone submission validation is recorded in [`submission/summary.json`](submission/summary.json).

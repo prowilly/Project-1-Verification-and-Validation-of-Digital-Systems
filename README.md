@@ -26,9 +26,13 @@ Banmeet's `crv/` and `coverage/` and Daniel's `ai_log.md` remain unchanged. Fres
 | Released mutants, CRV | **8/8 detected** | [Mutation summary](evidence/current/mutations/summary.json) |
 
 
-The coverage total refers to Banmeet's existing 70-bin model. Flags, valid-head data, ordering and reset recovery are also checked by assertions. Measured CRV probabilities differ from the declared state-dependent weights; see [the distribution review in FINDINGS.md](FINDINGS.md#stimulus-distribution-review). This discrepancy is disclosed without rewriting the team's constraint implementation.
+The coverage total refers to Banmeet's existing 70-bin model. Flags, valid-head data, ordering and reset recovery are also checked by assertions. Measured CRV probabilities differ from the declared state-dependent weights; see [the distribution limitation in closure.md](closure.md#residual-risk). This discrepancy is disclosed without rewriting the team's constraint implementation.
 
 The current released suite has no surviving mutants. [FINDINGS.md](FINDINGS.md) analyzes `ignore_full` and `ignore_empty` from Daniel's documented earlier 6/8 run, separately from the new results. The hidden grading pool has not been run.
+
+## Submit the assignment
+
+Upload [Project1_Submission.zip](submission/Project1_Submission.zip), which contains one runnable test directory and all required deliverables. Do not upload the whole repository ZIP: it includes both the baseline and CRV test modules. See [submission instructions](submission/README.md).
 
 ## Run the project
 
@@ -71,7 +75,8 @@ The baseline alone also runs with `make -C tb SIM=icarus`. For CRV, the root run
 | [`tests/`](tests/) | Checks for reliable simulation-result handling |
 | [`evidence/current/`](evidence/current/) | Fresh logs, XML, coverage and reproducibility manifests |
 | [`vplan.md`](vplan.md) | Requirements, coverage model, test matrix, risks and closure criteria |
-| [`FINDINGS.md`](FINDINGS.md) | Results, convergence, two historical survivors and remaining limitations |
+| [`closure.md`](closure.md) | Coverage target, measured holes, convergence and exclusions |
+| [`FINDINGS.md`](FINDINGS.md) | Mutation score, two historical survivors and residual risk |
 | [`ai_log.md`](ai_log.md) | Daniel's original Check the Machine record |
 | [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) | Evidence-backed team contributions and integration disclosure |
 | `HW4.zip`, [`tb/FINDINGS.md`](tb/FINDINGS.md) | Earlier HW4 material, retained as historical context |

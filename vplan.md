@@ -6,15 +6,15 @@
 **Contract:** [`dut/specs/fifo.md`](dut/specs/fifo.md)\
 **Implementation and evidence:** [`FINDINGS.md`](FINDINGS.md), [`evidence/current/`](evidence/current/)
 
-## Scope and timing
+## Scope
 
 Verify the supplied synchronous first-word-fall-through FIFO through its public pins. Default configuration is WIDTH=8, DEPTH=8. Additional measured configurations are listed separately in the regression summary. The reference queue derives expected behavior from the written specification, independently of RTL pointers and memory.
 
 Drive inputs at falling edges of a 10 ns clock; predict acceptance from pre-rising-edge occupancy; observe outputs 1 ns after rising edges. CRV also checks the public interface before the active edge. The reset check asserts reset between edges, verifies that state has not changed early, then checks count=0, empty=1 and full=0 after the resetting edge. Empty-state data is unspecified and is not compared.
 
-The supplied interface has no `almost_full` port and no switch to disable FWFT. Those generic handout features are inapplicable to this DUT. Asynchronous crossings, synthesis/timing/power, internal implementation coverage and exhaustive proofs are outside this project.
+Out of scope: This plan does not verify asynchronous clock-domain crossings, synthesis, timing closure, power, internal RTL implementation coverage, or exhaustive correctness over every possible history. It does not verify unspecified empty-state data or reset-time transfer acceptance beyond the specified reset outputs. The supplied interface has no `almost_full` port or switch to disable FWFT, so this plan does not cover either feature. DEPTH=1 and unrun width/depth settings are not verified.
 
-## Features, priorities and test traceability
+## Feature list
 
 H = required functional behavior; M = supplemental parameter testing. Every test listed below runs the reference-queue scoreboard.
 
@@ -75,20 +75,23 @@ The data constraint gives weight 1 each to zero and all-ones, and weight 6 to th
 
 The convergence experiment uses the existing `STIM` switch and run length: unchanged biased stimulus at 3,000 and 5,000 cycles, plus the existing uniform mode at 5,000. Uniform disables boundary/data constraints but retains the reset constraint. No constraints are rewritten, and no directed coverage fill is injected. Record holes, first-hit observations and final bins; retain measured closure limitations rather than invent tuning results.
 
-## Regression and mutation matrix
+## Test matrix
 
-| Run | Purpose | Pass criterion |
-|---|---|---|
-| Five tests in `tb/test_fifo.py` | Directed boundaries, wraps/reset, idle/transitions, control overlap, 1,200 Python-random transactions | 5/5 pass; baseline random seed `0x4701` (18177 decimal) |
-| `test_crv_seeded_regression`, decimal seeds 4701, 17, 4702 | Seeded pyvsc with public-interface checks and coverage | 1/1 each; 70/70 bins; 5,000 random cycles each |
-| Seed 4701 repeat | Reproducibility | Identical generated-stimulus hash and complete coverage report |
-| CRV WIDTH=16 DEPTH=5; WIDTH=8 DEPTH=4 | Supplemental width/rollover coverage | RTL parameter overrides match model; 1/1 each; record supplemental coverage and any holes separately |
-| Convergence runs | Observe holes and closure under existing settings | Clean checks pass; shorter/uniform runs may have explicitly reported holes |
-| Eight released mutations, each suite separately | Current mutation quality | Passing clean control; ≥90% released detection; each mutant compiles and produces valid test XML |
+The upload contains one cocotb test module, `test_fifo.py`, copied unchanged from `crv/test_fifo.py`. Its test function is `test_crv_seeded_regression`. The five directed baseline tests remain in the repository for supplementary evidence; they are not a second uploaded test module.
+
+| Test | Features / requirements | Configuration | Checks and pass criterion |
+|---|---|---|---|
+| test_crv_seeded_regression | F01–F12, F14; spec Behavior 1–6 and Corner cases | WIDTH=8, DEPTH=8; seed 4701; 5,000 cycles | Reset/recovery, queue ordering, valid head, count/flags, full/empty requests, overlap, wraps; one test passes and all 70 coverage bins hit |
+| test_crv_seeded_regression | F01–F12, F14; same contract | Seeds 17 and 4702; 5,000 cycles each | Same checks and full baseline coverage for each seed |
+| test_crv_seeded_regression | Reproducibility | Repeat seed 4701 with identical tools/settings | Identical stimulus hash and complete coverage report |
+| test_crv_seeded_regression | F13; Parameters and Behavior 1–6 | WIDTH=16 DEPTH=5; WIDTH=8 DEPTH=4 | Correct model/RTL parameter match; functional checks pass; supplemental coverage holes reported separately |
+| test_crv_seeded_regression | All applicable features; mutation sensitivity | Clean control plus eight released mutants, individually | Clean control passes; record found/total from assertion failures; build errors do not count as detections |
+
+The submitted directory runs with `make SIM=icarus SEED=4701 N_CYCLES=5000`. Its Makefile exposes `DUT` for the released/hidden mutant harness. See `submission/README.md` for ZIP contents and reproduction steps. In the full repository, the runner below additionally executes the five directed baseline tests and convergence experiments.
 
 Run `python scripts/run_verification.py --output evidence/generated` from the repository root after installing `requirements.txt` and Icarus Verilog. The runner copies source files into a temporary directory for each run. It records Python/dependency/simulator versions, source hashes, seed, commands, XML outcomes, actual stimulus and coverage. It rejects missing/empty XML, skips, infrastructure errors, failed clean controls and incomplete required coverage. Mutation failures must contain assertion diagnostics.
 
-## Risks and closure
+## Risk and spec ambiguity
 
 - **Distribution versus declared weights:** pyvsc implementation details can change the induced distribution. Measure it, disclose discrepancies, and retain teammate ownership of constraint changes.
 - **Finite model:** 70/70 describes the implemented bins, not exhaustive behavioral proof; some planned observations remain assertion-only. Small depths need new occupancy partitions; DEPTH=1 is not claimed supported.
@@ -97,4 +100,6 @@ Run `python scripts/run_verification.py --output evidence/generated` from the re
 - **Evidence provenance:** old HW4 logs, Daniel's original Check the Machine run and fresh `evidence/current/` results are separate records. Do not present one as the other's rerun.
 - **Team ownership:** preserve `crv/`, `coverage/`, and `ai_log.md`. New evidence belongs outside those paths. Any future behavioral changes in those files require coordination with their authors.
 
-Repository closure requires passing baseline/CRV, 70-bin closure, reproducible replay, current released-mutation evidence, an honest two-survivor analysis, this traceability plan, a contributions record and the original Check the Machine log. `REPORT.pdf` and the demo link remain pending separately. Automated checks do not attest teammate review or guarantee a course grade.
+## Closure criteria
+
+Repository closure requires passing baseline/CRV, 70-bin closure, reproducible replay, current released-mutation evidence, an honest two-survivor analysis, this traceability plan, a contributions record and the original Check the Machine log. The uploaded `REPORT.pdf` and demo link are included; their presence is separate from functional verification results. Automated checks do not attest teammate review or guarantee a course grade.
