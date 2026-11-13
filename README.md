@@ -10,7 +10,7 @@ A layered cocotb verification environment for the supplied synchronous first-wor
 
 ## Project status
 
-The repository includes the verification plan, layered environment, constrained-random tests, coverage model/report, findings, Check the Machine record and completed contributions record. **`REPORT.pdf` and the demo link remain pending.** Measured results and limitations are documented below; hidden-pool performance and team approval are not assumed.
+The repository includes the verification plan, layered environment, constrained-random tests, coverage model/report, findings, Check the Machine record and completed contributions record. The [project report](REPORT.pdf) and demo link are included. Measured results and limitations are documented below; hidden-pool performance and team approval are not assumed.
 
 Banmeet's `crv/` and `coverage/` and Daniel's `ai_log.md` remain unchanged. Fresh verification evidence is stored separately in `evidence/current/`.
 
@@ -86,7 +86,7 @@ William leads the layered environment, integration and verification documentatio
 - [x] Existing functional-coverage model and measured closure evidence
 - [x] Current released-mutation results and two historical survivor analyses
 - [x] Check the Machine record and team contributions
-- [ ] Final 4–6 page `REPORT.pdf`
-- [ ] Recorded demo link
+- [x] Project report — [REPORT.pdf](REPORT.pdf)
+- [x] Recorded demo link
 
 The supplied FIFO has fixed FWFT behavior and no `almost_full` signal. Tests follow its actual written specification. Automated results do not constitute teammate review or final course grading.
