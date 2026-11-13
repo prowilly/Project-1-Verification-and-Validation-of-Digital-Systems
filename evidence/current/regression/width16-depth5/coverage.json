@@ -1,0 +1,849 @@
+{
+  "checkpoints": [
+    {
+      "cycle": 0,
+      "hit": 3,
+      "holes": [
+        "fifo.accepted:none",
+        "fifo.accepted:read_only",
+        "fifo.accepted:write_only",
+        "fifo.accepted:both",
+        "fifo.flags:empty",
+        "fifo.flags:interior",
+        "fifo.flags:full",
+        "fifo.head_event:first_write_from_empty",
+        "fifo.head_event:read_reveals_next",
+        "fifo.head_event:simultaneous_replaces_one_entry",
+        "fifo.head_event:idle_head_stable",
+        "fifo.head_event:head_after_wrap",
+        "fifo.occ_x_accepted:('empty', 'none')",
+        "fifo.occ_x_accepted:('empty', 'write_only')",
+        "fifo.occ_x_accepted:('one', 'none')",
+        "fifo.occ_x_accepted:('one', 'read_only')",
+        "fifo.occ_x_accepted:('one', 'write_only')",
+        "fifo.occ_x_accepted:('one', 'both')",
+        "fifo.occ_x_accepted:('middle', 'none')",
+        "fifo.occ_x_accepted:('middle', 'read_only')",
+        "fifo.occ_x_accepted:('middle', 'write_only')",
+        "fifo.occ_x_accepted:('middle', 'both')",
+        "fifo.occ_x_accepted:('near_full', 'none')",
+        "fifo.occ_x_accepted:('near_full', 'read_only')",
+        "fifo.occ_x_accepted:('near_full', 'write_only')",
+        "fifo.occ_x_accepted:('near_full', 'both')",
+        "fifo.occ_x_accepted:('full', 'none')",
+        "fifo.occ_x_accepted:('full', 'read_only')",
+        "fifo.occ_x_head:('empty', 'first_write_from_empty')",
+        "fifo.occ_x_head:('one', 'simultaneous_replaces_one_entry')",
+        "fifo.occ_x_head:('one', 'idle_head_stable')",
+        "fifo.occ_x_head:('one', 'head_after_wrap')",
+        "fifo.occ_x_head:('middle', 'read_reveals_next')",
+        "fifo.occ_x_head:('middle', 'idle_head_stable')",
+        "fifo.occ_x_head:('middle', 'head_after_wrap')",
+        "fifo.occ_x_head:('near_full', 'read_reveals_next')",
+        "fifo.occ_x_head:('near_full', 'idle_head_stable')",
+        "fifo.occ_x_head:('near_full', 'head_after_wrap')",
+        "fifo.occ_x_head:('full', 'read_reveals_next')",
+        "fifo.occ_x_head:('full', 'idle_head_stable')",
+        "fifo.occ_x_head:('full', 'head_after_wrap')",
+        "fifo.occ_x_request:('empty', 'idle')",
+        "fifo.occ_x_request:('empty', 'read')",
+        "fifo.occ_x_request:('empty', 'write')",
+        "fifo.occ_x_request:('empty', 'both')",
+        "fifo.occ_x_request:('one', 'idle')",
+        "fifo.occ_x_request:('one', 'read')",
+        "fifo.occ_x_request:('one', 'write')",
+        "fifo.occ_x_request:('one', 'both')",
+        "fifo.occ_x_request:('middle', 'idle')",
+        "fifo.occ_x_request:('middle', 'read')",
+        "fifo.occ_x_request:('middle', 'write')",
+        "fifo.occ_x_request:('middle', 'both')",
+        "fifo.occ_x_request:('near_full', 'idle')",
+        "fifo.occ_x_request:('near_full', 'read')",
+        "fifo.occ_x_request:('near_full', 'write')",
+        "fifo.occ_x_request:('near_full', 'both')",
+        "fifo.occ_x_request:('full', 'idle')",
+        "fifo.occ_x_request:('full', 'read')",
+        "fifo.occ_x_request:('full', 'write')",
+        "fifo.occ_x_request:('full', 'both')",
+        "fifo.occupancy:empty",
+        "fifo.occupancy:one",
+        "fifo.occupancy:middle",
+        "fifo.occupancy:near_full",
+        "fifo.occupancy:full",
+        "fifo.pointer_wrap:no_wrap",
+        "fifo.pointer_wrap:write_wrap",
+        "fifo.pointer_wrap:read_wrap",
+        "fifo.pointer_wrap:both_wrapped",
+        "fifo.read_burst:single",
+        "fifo.read_burst:short",
+        "fifo.read_burst:long",
+        "fifo.recovery_origin:initial_reset",
+        "fifo.recovery_origin:reset_when_nonempty",
+        "fifo.request:idle",
+        "fifo.request:read",
+        "fifo.request:write",
+        "fifo.request:both",
+        "fifo.reset_control:reset_plus_write",
+        "fifo.reset_scenario:reset_when_nonempty",
+        "fifo.reset_scenario:post_reset_first_write",
+        "fifo.reset_x_first_accept:('initial_reset', 'write_only')",
+        "fifo.reset_x_first_accept:('reset_when_nonempty', 'write_only')",
+        "fifo.transition:empty_to_one",
+        "fifo.transition:one_to_empty",
+        "fifo.transition:near_full_to_full",
+        "fifo.transition:full_to_near_full",
+        "fifo.transition:hold_empty",
+        "fifo.transition:hold_full",
+        "fifo.transition:hold_interior",
+        "fifo.transition_x_flags:('empty_to_one', 'interior')",
+        "fifo.transition_x_flags:('one_to_empty', 'empty')",
+        "fifo.transition_x_flags:('near_full_to_full', 'full')",
+        "fifo.transition_x_flags:('full_to_near_full', 'interior')",
+        "fifo.transition_x_flags:('hold_empty', 'empty')",
+        "fifo.transition_x_flags:('hold_full', 'full')",
+        "fifo.transition_x_flags:('hold_interior', 'interior')",
+        "fifo.write_burst:single",
+        "fifo.write_burst:short",
+        "fifo.write_burst:long",
+        "fifo.write_data:all_zero",
+        "fifo.write_data:all_one",
+        "fifo.write_data:alternating",
+        "fifo.write_data:other"
+      ],
+      "total": 108
+    },
+    {
+      "cycle": 100,
+      "hit": 96,
+      "holes": [
+        "fifo.occ_x_accepted:('full', 'none')",
+        "fifo.occ_x_head:('full', 'idle_head_stable')",
+        "fifo.occ_x_head:('full', 'head_after_wrap')",
+        "fifo.occ_x_request:('full', 'idle')",
+        "fifo.occ_x_request:('full', 'read')",
+        "fifo.occ_x_request:('full', 'write')",
+        "fifo.recovery_origin:reset_when_nonempty",
+        "fifo.reset_control:reset_plus_write",
+        "fifo.reset_scenario:reset_when_nonempty",
+        "fifo.reset_x_first_accept:('reset_when_nonempty', 'write_only')",
+        "fifo.transition:hold_full",
+        "fifo.transition_x_flags:('hold_full', 'full')"
+      ],
+      "total": 108
+    },
+    {
+      "cycle": 200,
+      "hit": 102,
+      "holes": [
+        "fifo.occ_x_head:('full', 'head_after_wrap')",
+        "fifo.occ_x_request:('full', 'write')",
+        "fifo.recovery_origin:reset_when_nonempty",
+        "fifo.reset_control:reset_plus_write",
+        "fifo.reset_scenario:reset_when_nonempty",
+        "fifo.reset_x_first_accept:('reset_when_nonempty', 'write_only')"
+      ],
+      "total": 108
+    },
+    {
+      "cycle": 300,
+      "hit": 104,
+      "holes": [
+        "fifo.recovery_origin:reset_when_nonempty",
+        "fifo.reset_control:reset_plus_write",
+        "fifo.reset_scenario:reset_when_nonempty",
+        "fifo.reset_x_first_accept:('reset_when_nonempty', 'write_only')"
+      ],
+      "total": 108
+    },
+    {
+      "cycle": 400,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 500,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 600,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 700,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 800,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 900,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1000,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1100,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1200,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1300,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1400,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1500,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1600,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1700,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1800,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 1900,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2000,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2100,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2200,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2300,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2400,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2500,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2600,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2700,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2800,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 2900,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3000,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3100,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3200,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3300,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3400,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3500,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3600,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3700,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3800,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 3900,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4000,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4100,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4200,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4300,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4400,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4500,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4600,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4700,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4800,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 4900,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    },
+    {
+      "cycle": 5000,
+      "hit": 108,
+      "holes": [],
+      "total": 108
+    }
+  ],
+  "closed_at": 340,
+  "cycles_sampled": 5002,
+  "depth": 5,
+  "distribution_by_rule": {
+    "drain": {
+      "reads": 705,
+      "resets": 5,
+      "samples": 782,
+      "writes": 243
+    },
+    "fill": {
+      "reads": 236,
+      "resets": 1,
+      "samples": 849,
+      "writes": 763
+    },
+    "near_empty": {
+      "reads": 1010,
+      "resets": 7,
+      "samples": 1670,
+      "writes": 1171
+    },
+    "near_full": {
+      "reads": 1184,
+      "resets": 7,
+      "samples": 1699,
+      "writes": 1009
+    }
+  },
+  "drain_cycles": 2,
+  "drains": 140,
+  "events": {
+    "read_while_empty": 214,
+    "reset_nonempty": 20,
+    "reset_plus_write": 14,
+    "rw": 1823,
+    "rw_empty": 145,
+    "rw_full": 132,
+    "rw_mid": 1546,
+    "write_while_full": 214
+  },
+  "fills": 141,
+  "first_hit": {
+    "fifo.accepted:both": 2,
+    "fifo.accepted:none": 14,
+    "fifo.accepted:read_only": 3,
+    "fifo.accepted:write_only": 1,
+    "fifo.configuration:16x5": 0,
+    "fifo.flags:empty": 3,
+    "fifo.flags:full": 30,
+    "fifo.flags:interior": 1,
+    "fifo.head_event:first_write_from_empty": 1,
+    "fifo.head_event:head_after_wrap": 8,
+    "fifo.head_event:idle_head_stable": 14,
+    "fifo.head_event:read_reveals_next": 7,
+    "fifo.head_event:simultaneous_replaces_one_entry": 2,
+    "fifo.occ_x_accepted:('empty', 'none')": 50,
+    "fifo.occ_x_accepted:('empty', 'write_only')": 1,
+    "fifo.occ_x_accepted:('full', 'none')": 125,
+    "fifo.occ_x_accepted:('full', 'read_only')": 31,
+    "fifo.occ_x_accepted:('middle', 'both')": 7,
+    "fifo.occ_x_accepted:('middle', 'none')": 70,
+    "fifo.occ_x_accepted:('middle', 'read_only')": 18,
+    "fifo.occ_x_accepted:('middle', 'write_only')": 10,
+    "fifo.occ_x_accepted:('near_full', 'both')": 13,
+    "fifo.occ_x_accepted:('near_full', 'none')": 14,
+    "fifo.occ_x_accepted:('near_full', 'read_only')": 15,
+    "fifo.occ_x_accepted:('near_full', 'write_only')": 30,
+    "fifo.occ_x_accepted:('one', 'both')": 2,
+    "fifo.occ_x_accepted:('one', 'none')": 35,
+    "fifo.occ_x_accepted:('one', 'read_only')": 3,
+    "fifo.occ_x_accepted:('one', 'write_only')": 6,
+    "fifo.occ_x_head:('empty', 'first_write_from_empty')": 1,
+    "fifo.occ_x_head:('full', 'head_after_wrap')": 282,
+    "fifo.occ_x_head:('full', 'idle_head_stable')": 125,
+    "fifo.occ_x_head:('full', 'read_reveals_next')": 31,
+    "fifo.occ_x_head:('middle', 'head_after_wrap')": 8,
+    "fifo.occ_x_head:('middle', 'idle_head_stable')": 70,
+    "fifo.occ_x_head:('middle', 'read_reveals_next')": 7,
+    "fifo.occ_x_head:('near_full', 'head_after_wrap')": 17,
+    "fifo.occ_x_head:('near_full', 'idle_head_stable')": 14,
+    "fifo.occ_x_head:('near_full', 'read_reveals_next')": 13,
+    "fifo.occ_x_head:('one', 'head_after_wrap')": 100,
+    "fifo.occ_x_head:('one', 'idle_head_stable')": 35,
+    "fifo.occ_x_head:('one', 'simultaneous_replaces_one_entry')": 2,
+    "fifo.occ_x_request:('empty', 'both')": 1,
+    "fifo.occ_x_request:('empty', 'idle')": 53,
+    "fifo.occ_x_request:('empty', 'read')": 50,
+    "fifo.occ_x_request:('empty', 'write')": 93,
+    "fifo.occ_x_request:('full', 'both')": 31,
+    "fifo.occ_x_request:('full', 'idle')": 125,
+    "fifo.occ_x_request:('full', 'read')": 126,
+    "fifo.occ_x_request:('full', 'write')": 226,
+    "fifo.occ_x_request:('middle', 'both')": 7,
+    "fifo.occ_x_request:('middle', 'idle')": 70,
+    "fifo.occ_x_request:('middle', 'read')": 18,
+    "fifo.occ_x_request:('middle', 'write')": 10,
+    "fifo.occ_x_request:('near_full', 'both')": 13,
+    "fifo.occ_x_request:('near_full', 'idle')": 14,
+    "fifo.occ_x_request:('near_full', 'read')": 15,
+    "fifo.occ_x_request:('near_full', 'write')": 30,
+    "fifo.occ_x_request:('one', 'both')": 2,
+    "fifo.occ_x_request:('one', 'idle')": 35,
+    "fifo.occ_x_request:('one', 'read')": 3,
+    "fifo.occ_x_request:('one', 'write')": 6,
+    "fifo.occupancy:empty": 1,
+    "fifo.occupancy:full": 31,
+    "fifo.occupancy:middle": 7,
+    "fifo.occupancy:near_full": 13,
+    "fifo.occupancy:one": 2,
+    "fifo.pointer_wrap:both_wrapped": 8,
+    "fifo.pointer_wrap:no_wrap": 1,
+    "fifo.pointer_wrap:read_wrap": 8,
+    "fifo.pointer_wrap:write_wrap": 6,
+    "fifo.read_burst:long": 6,
+    "fifo.read_burst:short": 10,
+    "fifo.read_burst:single": 12,
+    "fifo.recovery_origin:initial_reset": 1,
+    "fifo.recovery_origin:reset_when_nonempty": 340,
+    "fifo.request:both": 1,
+    "fifo.request:idle": 14,
+    "fifo.request:read": 3,
+    "fifo.request:write": 6,
+    "fifo.reset_control:reset_only": 0,
+    "fifo.reset_control:reset_plus_write": 339,
+    "fifo.reset_scenario:initial_reset": 0,
+    "fifo.reset_scenario:post_reset_first_write": 1,
+    "fifo.reset_scenario:reset_when_nonempty": 339,
+    "fifo.reset_x_first_accept:('initial_reset', 'write_only')": 1,
+    "fifo.reset_x_first_accept:('reset_when_nonempty', 'write_only')": 340,
+    "fifo.transition:empty_to_one": 1,
+    "fifo.transition:full_to_near_full": 31,
+    "fifo.transition:hold_empty": 50,
+    "fifo.transition:hold_full": 125,
+    "fifo.transition:hold_interior": 2,
+    "fifo.transition:near_full_to_full": 30,
+    "fifo.transition:one_to_empty": 3,
+    "fifo.transition_x_flags:('empty_to_one', 'interior')": 1,
+    "fifo.transition_x_flags:('full_to_near_full', 'interior')": 31,
+    "fifo.transition_x_flags:('hold_empty', 'empty')": 50,
+    "fifo.transition_x_flags:('hold_full', 'full')": 125,
+    "fifo.transition_x_flags:('hold_interior', 'interior')": 2,
+    "fifo.transition_x_flags:('near_full_to_full', 'full')": 30,
+    "fifo.transition_x_flags:('one_to_empty', 'empty')": 3,
+    "fifo.write_burst:long": 14,
+    "fifo.write_burst:short": 3,
+    "fifo.write_burst:single": 17,
+    "fifo.write_data:all_one": 4,
+    "fifo.write_data:all_zero": 5,
+    "fifo.write_data:alternating": 6,
+    "fifo.write_data:other": 1
+  },
+  "hit": 108,
+  "holes": [],
+  "items": {
+    "fifo.accepted": {
+      "bins": {
+        "both": 1546,
+        "none": 662,
+        "read_only": 1362,
+        "write_only": 1412
+      },
+      "hit": 4,
+      "total": 4
+    },
+    "fifo.configuration": {
+      "bins": {
+        "16x5": 1
+      },
+      "hit": 1,
+      "total": 1
+    },
+    "fifo.flags": {
+      "bins": {
+        "empty": 345,
+        "full": 350,
+        "interior": 4287
+      },
+      "hit": 3,
+      "total": 3
+    },
+    "fifo.head_event": {
+      "bins": {
+        "first_write_from_empty": 250,
+        "head_after_wrap": 530,
+        "idle_head_stable": 465,
+        "read_reveals_next": 2117,
+        "simultaneous_replaces_one_entry": 561
+      },
+      "hit": 5,
+      "total": 5
+    },
+    "fifo.occ_x_accepted": {
+      "bins": {
+        "('empty', 'none')": 115,
+        "('empty', 'write_only')": 250,
+        "('full', 'none')": 123,
+        "('full', 'read_only')": 225,
+        "('middle', 'both')": 421,
+        "('middle', 'none')": 108,
+        "('middle', 'read_only')": 516,
+        "('middle', 'write_only')": 581,
+        "('near_full', 'both')": 564,
+        "('near_full', 'none')": 162,
+        "('near_full', 'read_only')": 391,
+        "('near_full', 'write_only')": 227,
+        "('one', 'both')": 561,
+        "('one', 'none')": 154,
+        "('one', 'read_only')": 230,
+        "('one', 'write_only')": 354
+      },
+      "hit": 16,
+      "total": 16
+    },
+    "fifo.occ_x_head": {
+      "bins": {
+        "('empty', 'first_write_from_empty')": 250,
+        "('full', 'head_after_wrap')": 40,
+        "('full', 'idle_head_stable')": 41,
+        "('full', 'read_reveals_next')": 225,
+        "('middle', 'head_after_wrap')": 184,
+        "('middle', 'idle_head_stable')": 108,
+        "('middle', 'read_reveals_next')": 937,
+        "('near_full', 'head_after_wrap')": 190,
+        "('near_full', 'idle_head_stable')": 162,
+        "('near_full', 'read_reveals_next')": 955,
+        "('one', 'head_after_wrap')": 116,
+        "('one', 'idle_head_stable')": 154,
+        "('one', 'simultaneous_replaces_one_entry')": 561
+      },
+      "hit": 13,
+      "total": 13
+    },
+    "fifo.occ_x_request": {
+      "bins": {
+        "('empty', 'both')": 145,
+        "('empty', 'idle')": 46,
+        "('empty', 'read')": 69,
+        "('empty', 'write')": 105,
+        "('full', 'both')": 132,
+        "('full', 'idle')": 41,
+        "('full', 'read')": 93,
+        "('full', 'write')": 82,
+        "('middle', 'both')": 421,
+        "('middle', 'idle')": 108,
+        "('middle', 'read')": 516,
+        "('middle', 'write')": 581,
+        "('near_full', 'both')": 564,
+        "('near_full', 'idle')": 162,
+        "('near_full', 'read')": 391,
+        "('near_full', 'write')": 227,
+        "('one', 'both')": 561,
+        "('one', 'idle')": 154,
+        "('one', 'read')": 230,
+        "('one', 'write')": 354
+      },
+      "hit": 20,
+      "total": 20
+    },
+    "fifo.occupancy": {
+      "bins": {
+        "empty": 365,
+        "full": 348,
+        "middle": 1626,
+        "near_full": 1344,
+        "one": 1299
+      },
+      "hit": 5,
+      "total": 5
+    },
+    "fifo.pointer_wrap": {
+      "bins": {
+        "both_wrapped": 20,
+        "no_wrap": 3823,
+        "read_wrap": 574,
+        "write_wrap": 585
+      },
+      "hit": 4,
+      "total": 4
+    },
+    "fifo.read_burst": {
+      "bins": {
+        "long": 194,
+        "short": 493,
+        "single": 469
+      },
+      "hit": 3,
+      "total": 3
+    },
+    "fifo.recovery_origin": {
+      "bins": {
+        "initial_reset": 1,
+        "reset_when_nonempty": 20
+      },
+      "hit": 2,
+      "total": 2
+    },
+    "fifo.request": {
+      "bins": {
+        "both": 1823,
+        "idle": 511,
+        "read": 1299,
+        "write": 1349
+      },
+      "hit": 4,
+      "total": 4
+    },
+    "fifo.reset_control": {
+      "bins": {
+        "reset_only": 7,
+        "reset_plus_write": 14
+      },
+      "hit": 2,
+      "total": 2
+    },
+    "fifo.reset_scenario": {
+      "bins": {
+        "initial_reset": 1,
+        "post_reset_first_write": 21,
+        "reset_when_nonempty": 20
+      },
+      "hit": 3,
+      "total": 3
+    },
+    "fifo.reset_x_first_accept": {
+      "bins": {
+        "('initial_reset', 'write_only')": 1,
+        "('reset_when_nonempty', 'write_only')": 20
+      },
+      "hit": 2,
+      "total": 2
+    },
+    "fifo.transition": {
+      "bins": {
+        "empty_to_one": 250,
+        "full_to_near_full": 225,
+        "hold_empty": 115,
+        "hold_full": 123,
+        "hold_interior": 1970,
+        "near_full_to_full": 227,
+        "one_to_empty": 230
+      },
+      "hit": 7,
+      "total": 7
+    },
+    "fifo.transition_x_flags": {
+      "bins": {
+        "('empty_to_one', 'interior')": 250,
+        "('full_to_near_full', 'interior')": 225,
+        "('hold_empty', 'empty')": 115,
+        "('hold_full', 'full')": 123,
+        "('hold_interior', 'interior')": 1970,
+        "('near_full_to_full', 'full')": 227,
+        "('one_to_empty', 'empty')": 230
+      },
+      "hit": 7,
+      "total": 7
+    },
+    "fifo.write_burst": {
+      "bins": {
+        "long": 197,
+        "short": 547,
+        "single": 405
+      },
+      "hit": 3,
+      "total": 3
+    },
+    "fifo.write_data": {
+      "bins": {
+        "all_one": 324,
+        "all_zero": 249,
+        "alternating": 583,
+        "other": 1802
+      },
+      "hit": 4,
+      "total": 4
+    }
+  },
+  "occupancy_counts": {
+    "0": 365,
+    "1": 1305,
+    "2": 799,
+    "3": 832,
+    "4": 1349,
+    "5": 350
+  },
+  "pattern_counts": {
+    "0": 463,
+    "1": 514,
+    "2": 492,
+    "3": 472,
+    "4": 3059
+  },
+  "percentage": 100.0,
+  "random_coverage": {
+    "hit": 108,
+    "holes": [],
+    "total": 108
+  },
+  "random_cycles": 5000,
+  "require_complete": true,
+  "reset_denominator": 200,
+  "reset_eligible_cycles": 4635,
+  "seed": 4701,
+  "stimulus": "biased",
+  "stimulus_sha256": "727e823fb38607041a8f798674befa25f537002ce2bbdc36a88cf498e42a8531",
+  "total": 108,
+  "width": 16
+}

@@ -1,6 +1,6 @@
 """Golden reference model for the CRAFT synchronous FWFT FIFO (dut/fifo.sv).
 
-Mirrors the RTL exactly: full/empty gate writes/reads (evaluated on the
+Implements the written public-interface specification: full/empty gate writes/reads (evaluated on the
 *current* state), a simultaneous read+write leaves the count unchanged, and
 rd_data (the head) is valid only while !empty.
 """

@@ -1,132 +1,21 @@
-# Contributions — <team name> · <track>
+# Project 1 contributions
 
-<!-- Capstone, Milestones 1-4. Lives in your team repo root as CONTRIBUTIONS.md.
-     ONE file per team, updated at every milestone — not written at the end.
-     Delete every comment block before you submit. -->
+**Course:** EEE 4701 — Verification and Validation of Digital Systems\
+**Team:** William Garland, Banmeet Singh, Daniel Jo\
+**Updated:** November 13, 2026
 
-> This file and the git history are cross-checked against each other, and
-> against every member's confidential peer eval. Where the three disagree, the
-> conversation happens *before* the Professionalism row is scored — so make
-> them agree. A file written the night of M4 will not survive that check, and
-> the way it fails is by being vague.
+This record is grounded in the repository's existing commit history and the explicitly disclosed completion work below. It does not estimate hours or contribution percentages from commit counts.
 
-**Members:** <name (NID) · name (NID) · …>
-**Repo:** <URL>
-**Track:** RV32I core / AXI-Lite subsystem / secure_gate
-**Last updated:** <date> · **through milestone:** M__
+| Member | Recorded contribution | Repository evidence |
+|---|---|---|
+| William Garland | Established the repository and verification plan; brought in the FIFO/specification/reference model and HW4 baseline; split the driver, monitor, scoreboard and environment into reusable modules; added directed reset/idle/transition checks and standalone build paths | `6df778e` (`vplan.md`), `fac4570` (baseline/mutant definitions), `65892f0` (layered modules), `be3d156` (directed tests), `ebb49f8` (Eustis author `wi323300`, Makefile paths); `tb/`, `dut/`, `lib/` |
+| Banmeet Singh | Added and integrated pyvsc constrained-random stimulus; implemented the initial functional-coverage model and CRV Makefile; committed the original measured 70-bin report | `d6938c9`, `db9b73d` (`crv/`), `05a331f` (`coverage/fifo_coverage.py`), `030309a` (removed duplicate coverage location), `5826bbd` (coverage report) |
+| Daniel Jo | Added the Check the Machine AI prompt, prior predictions, mutation output and correction discussion; introduced the initial contributions template | `2aff308` (`ai_log.md`, original preserved in `evidence/history/ai_log_initial.md`), `a39a54d` (initial template) |
 
----
+## Completion and AI assistance
 
-## How to read this file
+At William's explicit request on November 13, ChatGPT/Codex assisted with the repository-wide completion commit: filling the coverage-model gaps, strengthening reporting/failure detection, adding reproducible regressions and controlled mutation experiments, correcting documentation, assembling the evidence, and updating the front-page README. This work extends the team's files above; it is not presented as independently hand-written work by any teammate.
 
-Each milestone section lists what each member owned, with the commits, files, or
-tags that show it. "Helped with the testbench" is not a contribution record.
-"Wrote the constrained-random sequence and its coverage bins — `tb/seq_rw.py`,
-commits `a1b2c3d`..`e4f5g6h`" is.
+The assistant executed the simulations and focused unit checks recorded in `evidence/current/`, against the source hashes in each manifest. The model and checks were compared with `dut/specs/fifo.md`. The AI predictions, original historical record, observed outcomes and changes are documented in `ai_log.md`.
 
-Work that is genuinely shared gets its own row and says how it was shared
-(pairing, review, a split you can describe). Do not inflate, and do not
-flatten real differences into a polite fiction — an honest record of an uneven
-milestone reads far better than a uniform one nobody believes.
-
----
-
-## M1 — <due Wk 11>
-
-| Member | What they owned | Evidence (commits / files / PRs) | Approx. share |
-|--------|-----------------|----------------------------------|--------------:|
-|        |                 |                                  |               |
-|        |                 |                                  |               |
-
-**Shared or paired work:**
-
-**What slipped, and who picked it up:**
-
-<!-- Every team has a milestone where something slipped. Saying so here, at the
-     time, is what makes the rest of the file credible. -->
-
-## M2 — <due Wk 12>
-
-| Member | What they owned | Evidence (commits / files / PRs) | Approx. share |
-|--------|-----------------|----------------------------------|--------------:|
-|        |                 |                                  |               |
-
-**Shared or paired work:**
-
-**What slipped, and who picked it up:**
-
-**Changes to the division of labor since M1, and why:**
-
-## M3 — <due Wk 13>
-
-| Member | What they owned | Evidence (commits / files / PRs) | Approx. share |
-|--------|-----------------|----------------------------------|--------------:|
-|        |                 |                                  |               |
-
-**Shared or paired work:**
-
-**What slipped, and who picked it up:**
-
-**Changes to the division of labor since M2, and why:**
-
-## M4 — <due Wk 14, at the `m4` tag>
-
-| Member | What they owned | Evidence (commits / files / PRs) | Approx. share |
-|--------|-----------------|----------------------------------|--------------:|
-|        |                 |                                  |               |
-
-**Shared or paired work:**
-
-**What slipped, and who picked it up:**
-
----
-
-## Whole-project summary
-
-One row per member, across all four milestones. This is the row a reader checks
-first, so it must be consistent with the four sections above.
-
-| Member | Principal contributions (all four milestones) | Overall share |
-|--------|-----------------------------------------------|--------------:|
-|        |                                               |               |
-|        |                                               |               |
-
-**The three things this team did that we would each defend in an interview:**
-
-1.
-2.
-3.
-
-## Non-code contributions
-
-Real work that leaves a thin git trace — and is graded all the same. Cite the
-artifact where one exists.
-
-| Member | Contribution | Where it shows |
-|--------|--------------|----------------|
-|        | spec archaeology / vplan authorship / debugging sessions / demo prep / review | |
-
-## AI assistance
-
-Consistent with the course policy and your `ctm` record: name where an assistant
-was used on capstone work, and who verified the output. The verifier is a named
-person, always.
-
-| Where | Used for | Verified by | Where the verification shows |
-|-------|----------|-------------|------------------------------|
-|       |          |             |                              |
-
----
-
-## Attestation
-
-- [ ] Every claim above can be traced to the repo history.
-- [ ] This file was updated at each milestone, not reconstructed at the end.
-- [ ] Every member has read this file and agrees it is accurate.
-- [ ] Each member has separately submitted their **confidential individual peer
-      eval** — teammates' main contributions, an equity judgment, one sentence
-      of evidence each — outside this repo, by the M4 deadline.
-
-<!-- The peer eval is individual and confidential. It does NOT go in the repo,
-     and it is not this file. A missing eval is a professionalism problem of
-     its own, independent of how good the project is. -->
+William requested and authorized this integration and publication. The repository does not claim that William, Banmeet or Daniel personally reran or reviewed the new automated completion results during this session. The report PDF and recorded demo remain the team's separate deliverables.

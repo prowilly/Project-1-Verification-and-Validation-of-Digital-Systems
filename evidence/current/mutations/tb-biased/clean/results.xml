@@ -1,0 +1,10 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1794599512" />
+    <testcase name="test_fifo_directed_corners" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py" lineno="21" time="0.016677141189575195" sim_time_ns="481.001" ratio_time="28841.93367030265" />
+    <testcase name="test_fifo_pointer_wrap_and_reset" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py" lineno="70" time="0.04825854301452637" sim_time_ns="1361.001" ratio_time="28202.281191753413" />
+    <testcase name="test_fifo_seeded_random_interleave" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py" lineno="100" time="0.41431689262390137" sim_time_ns="12061.001" ratio_time="29110.57022950895" />
+    <testcase name="test_fifo_idle_hold_and_flag_transitions" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py" lineno="126" time="0.0058634281158447266" sim_time_ns="311.0010000000002" ratio_time="53040.813983816566" />
+    <testcase name="test_fifo_synchronous_reset_with_requests" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py" lineno="153" time="0.0027608871459960938" sim_time_ns="101.00099999999838" ratio_time="36582.806416579726" />
+  </testsuite>
+</testsuites>

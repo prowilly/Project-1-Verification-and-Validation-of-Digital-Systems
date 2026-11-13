@@ -1,0 +1,265 @@
+fifo:
+  cover_percentage: 100.0
+  coverage: 108
+  size: 108
+  type: <class 'cocotb_coverage.coverage.CoverItem'>
+fifo.accepted:
+  at_least: 1
+  bins:_hits:
+    both: 1450
+    none: 614
+    read_only: 1406
+    write_only: 1510
+  cover_percentage: 100.0
+  coverage: 4
+  size: 4
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.configuration:
+  at_least: 1
+  bins:_hits:
+    8x8: 1
+  cover_percentage: 100.0
+  coverage: 1
+  size: 1
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.flags:
+  at_least: 1
+  bins:_hits:
+    empty: 276
+    full: 302
+    interior: 4402
+  cover_percentage: 100.0
+  coverage: 3
+  size: 3
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.head_event:
+  at_least: 1
+  bins:_hits:
+    first_write_from_empty: 198
+    head_after_wrap: 330
+    idle_head_stable: 447
+    read_reveals_next: 2262
+    simultaneous_replaces_one_entry: 422
+  cover_percentage: 100.0
+  coverage: 5
+  size: 5
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.occ_x_accepted:
+  at_least: 1
+  bins:_hits:
+    ('empty', 'none'): 104
+    ('empty', 'write_only'): 198
+    ('full', 'none'): 105
+    ('full', 'read_only'): 195
+    ('middle', 'both'): 646
+    ('middle', 'none'): 180
+    ('middle', 'read_only'): 737
+    ('middle', 'write_only'): 828
+    ('near_full', 'both'): 382
+    ('near_full', 'none'): 119
+    ('near_full', 'read_only'): 302
+    ('near_full', 'write_only'): 197
+    ('one', 'both'): 422
+    ('one', 'none'): 106
+    ('one', 'read_only'): 172
+    ('one', 'write_only'): 287
+  cover_percentage: 100.0
+  coverage: 16
+  size: 16
+  type: <class 'cocotb_coverage.coverage.CoverCross'>
+  weight: 1
+fifo.occ_x_head:
+  at_least: 1
+  bins:_hits:
+    ('empty', 'first_write_from_empty'): 198
+    ('full', 'head_after_wrap'): 21
+    ('full', 'idle_head_stable'): 42
+    ('full', 'read_reveals_next'): 195
+    ('middle', 'head_after_wrap'): 176
+    ('middle', 'idle_head_stable'): 180
+    ('middle', 'read_reveals_next'): 1383
+    ('near_full', 'head_after_wrap'): 86
+    ('near_full', 'idle_head_stable'): 119
+    ('near_full', 'read_reveals_next'): 684
+    ('one', 'head_after_wrap'): 47
+    ('one', 'idle_head_stable'): 106
+    ('one', 'simultaneous_replaces_one_entry'): 422
+  cover_percentage: 100.0
+  coverage: 13
+  size: 13
+  type: <class 'cocotb_coverage.coverage.CoverCross'>
+  weight: 1
+fifo.occ_x_request:
+  at_least: 1
+  bins:_hits:
+    ('empty', 'both'): 121
+    ('empty', 'idle'): 44
+    ('empty', 'read'): 60
+    ('empty', 'write'): 77
+    ('full', 'both'): 121
+    ('full', 'idle'): 42
+    ('full', 'read'): 74
+    ('full', 'write'): 63
+    ('middle', 'both'): 646
+    ('middle', 'idle'): 180
+    ('middle', 'read'): 737
+    ('middle', 'write'): 828
+    ('near_full', 'both'): 382
+    ('near_full', 'idle'): 119
+    ('near_full', 'read'): 302
+    ('near_full', 'write'): 197
+    ('one', 'both'): 422
+    ('one', 'idle'): 106
+    ('one', 'read'): 172
+    ('one', 'write'): 287
+  cover_percentage: 100.0
+  coverage: 20
+  size: 20
+  type: <class 'cocotb_coverage.coverage.CoverCross'>
+  weight: 1
+fifo.occupancy:
+  at_least: 1
+  bins:_hits:
+    empty: 302
+    full: 300
+    middle: 2391
+    near_full: 1000
+    one: 987
+  cover_percentage: 100.0
+  coverage: 5
+  size: 5
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.pointer_wrap:
+  at_least: 1
+  bins:_hits:
+    both_wrapped: 24
+    no_wrap: 4279
+    read_wrap: 344
+    write_wrap: 357
+  cover_percentage: 100.0
+  coverage: 4
+  size: 4
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.read_burst:
+  at_least: 1
+  bins:_hits:
+    long: 65
+    short: 581
+    single: 467
+  cover_percentage: 100.0
+  coverage: 3
+  size: 3
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.recovery_origin:
+  at_least: 1
+  bins:_hits:
+    initial_reset: 1
+    reset_when_nonempty: 26
+  cover_percentage: 100.0
+  coverage: 2
+  size: 2
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.request:
+  at_least: 1
+  bins:_hits:
+    both: 1692
+    idle: 491
+    read: 1345
+    write: 1452
+  cover_percentage: 100.0
+  coverage: 4
+  size: 4
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.reset_control:
+  at_least: 1
+  bins:_hits:
+    reset_only: 12
+    reset_plus_write: 15
+  cover_percentage: 100.0
+  coverage: 2
+  size: 2
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.reset_scenario:
+  at_least: 1
+  bins:_hits:
+    initial_reset: 1
+    post_reset_first_write: 27
+    reset_when_nonempty: 26
+  cover_percentage: 100.0
+  coverage: 3
+  size: 3
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.reset_x_first_accept:
+  at_least: 1
+  bins:_hits:
+    ('initial_reset', 'write_only'): 1
+    ('reset_when_nonempty', 'write_only'): 26
+  cover_percentage: 100.0
+  coverage: 2
+  size: 2
+  type: <class 'cocotb_coverage.coverage.CoverCross'>
+  weight: 1
+fifo.transition:
+  at_least: 1
+  bins:_hits:
+    empty_to_one: 198
+    full_to_near_full: 195
+    hold_empty: 104
+    hold_full: 105
+    hold_interior: 1855
+    near_full_to_full: 197
+    one_to_empty: 172
+  cover_percentage: 100.0
+  coverage: 7
+  size: 7
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.transition_x_flags:
+  at_least: 1
+  bins:_hits:
+    ('empty_to_one', 'interior'): 198
+    ('full_to_near_full', 'interior'): 195
+    ('hold_empty', 'empty'): 104
+    ('hold_full', 'full'): 105
+    ('hold_interior', 'interior'): 1855
+    ('near_full_to_full', 'full'): 197
+    ('one_to_empty', 'empty'): 172
+  cover_percentage: 100.0
+  coverage: 7
+  size: 7
+  type: <class 'cocotb_coverage.coverage.CoverCross'>
+  weight: 1
+fifo.write_burst:
+  at_least: 1
+  bins:_hits:
+    long: 85
+    short: 562
+    single: 420
+  cover_percentage: 100.0
+  coverage: 3
+  size: 3
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1
+fifo.write_data:
+  at_least: 1
+  bins:_hits:
+    all_one: 310
+    all_zero: 311
+    alternating: 568
+    other: 1771
+  cover_percentage: 100.0
+  coverage: 4
+  size: 4
+  type: <class 'cocotb_coverage.coverage.CoverPoint'>
+  weight: 1

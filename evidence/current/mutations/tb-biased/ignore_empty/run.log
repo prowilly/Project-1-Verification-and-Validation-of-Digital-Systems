@@ -1,0 +1,83 @@
+make: Entering directory '/workspace/scratch/34fef8e672bb/project1/tb'
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/results.xml
+"make" -f Makefile /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/results.xml
+make[1]: Entering directory '/workspace/scratch/34fef8e672bb/project1/tb'
+mkdir -p /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/sim_build
+/workspace/scratch/34fef8e672bb/audit-bin/iverilog -o /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/sim_build/sim.vvp -D COCOTB_SIM=1 -s fifo -g2012 -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/sim_build/cmds.f  /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/fifo.sv
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/results.xml
+MODULE=test_fifo TESTCASE= TOPLEVEL=fifo TOPLEVEL_LANG=verilog \
+         /workspace/scratch/34fef8e672bb/audit-bin/vvp -M /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/tb-biased/ignore_empty/sim_build/sim.vvp  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1794599538
+     0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_directed_corners
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_pointer_wrap_and_reset
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_seeded_random_interleave
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_idle_hold_and_flag_transitions
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_fifo_synchronous_reset_with_requests
+     0.00ns INFO     cocotb.regression                  running test_fifo_directed_corners (1/5)
+    31.00ns INFO     cocotb.regression                  test_fifo_directed_corners failed
+                                                        Traceback (most recent call last):
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py", line 27, in test_fifo_directed_corners
+                                                            await tb.cycle(rd_en=1, label="read while empty")
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_bench.py", line 79, in cycle
+                                                            return await self.apply(FifoTransaction(wr_en, rd_en, wr_data), label)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_bench.py", line 74, in apply
+                                                            observed = await self.monitor.sample()
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_monitor.py", line 34, in sample
+                                                            return self.read_pins()
+                                                                   ^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_monitor.py", line 20, in read_pins
+                                                            head = self._known("rd_data") if not empty else None
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_monitor.py", line 12, in _known
+                                                            assert value.is_resolvable, f"Unresolved required FIFO output/input: {name}={value}"
+                                                                   ^^^^^^^^^^^^^^^^^^^
+                                                        AssertionError: Unresolved required FIFO output/input: rd_data=xxxxxxxx
+    31.00ns INFO     cocotb.regression                  running test_fifo_pointer_wrap_and_reset (2/5)
+  1392.00ns INFO     cocotb.fifo                        Pointer wrap and midstream reset checks passed
+  1392.00ns INFO     cocotb.regression                  test_fifo_pointer_wrap_and_reset passed
+  1392.00ns INFO     cocotb.regression                  running test_fifo_seeded_random_interleave (3/5)
+  3983.00ns INFO     cocotb.regression                  test_fifo_seeded_random_interleave failed
+                                                        Traceback (most recent call last):
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/test_fifo.py", line 118, in test_fifo_seeded_random_interleave
+                                                            await tb.cycle(wr_en, rd_en, wr_data, label=label)
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_bench.py", line 79, in cycle
+                                                            return await self.apply(FifoTransaction(wr_en, rd_en, wr_data), label)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_bench.py", line 75, in apply
+                                                            self.scoreboard.check(observed, tx=tx, label=label)
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_scoreboard.py", line 34, in check
+                                                            assert observed.count == self.model.count, "count mismatch: " + info
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                        AssertionError: count mismatch: cycle=259, case=read-biased random, tx=FifoTransaction(wr_en=1, rd_en=1, wr_data=25), expected_queue=[25], observed=FifoObservation(count=0, full=0, empty=1, rd_data=None, wr_en=1, rd_en=1, wr_data=25)
+  3983.00ns INFO     cocotb.regression                  running test_fifo_idle_hold_and_flag_transitions (4/5)
+                                                          Cover 0->1, 7->8, 8->7, 1->0 and hold states with FWFT checks.
+  4294.00ns INFO     cocotb.fifo                        Idle and key flag transition checks passed
+  4294.00ns INFO     cocotb.regression                  test_fifo_idle_hold_and_flag_transitions passed
+  4294.00ns INFO     cocotb.regression                  running test_fifo_synchronous_reset_with_requests (5/5)
+                                                          Check specified reset outputs on a clock edge with both enables high.
+                                                          
+                                                          A reset-time write request is a security/trust control combination. The
+                                                          spec requires the reset outputs but does not define a transfer on that edge.
+  4395.00ns INFO     cocotb.fifo                        Synchronous reset with asserted controls and recovery passed
+  4395.01ns INFO     cocotb.regression                  test_fifo_synchronous_reset_with_requests passed
+  4395.01ns INFO     cocotb.regression                  *************************************************************************************************************
+                                                        ** TEST                                                 STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *************************************************************************************************************
+                                                        ** test_fifo.test_fifo_directed_corners                  FAIL          31.00           0.00      22807.86  **
+                                                        ** test_fifo.test_fifo_pointer_wrap_and_reset            PASS        1361.00           0.03      46174.43  **
+                                                        ** test_fifo.test_fifo_seeded_random_interleave          FAIL        2591.00           0.05      49666.58  **
+                                                        ** test_fifo.test_fifo_idle_hold_and_flag_transitions    PASS         311.00           0.01      58371.72  **
+                                                        ** test_fifo.test_fifo_synchronous_reset_with_requests   PASS         101.00           0.00      49991.61  **
+                                                        *************************************************************************************************************
+                                                        ** TESTS=5 PASS=3 FAIL=2 SKIP=0                                      4395.01           0.10      44159.93  **
+                                                        *************************************************************************************************************
+                                                        
+make[1]: Leaving directory '/workspace/scratch/34fef8e672bb/project1/tb'
+make: Leaving directory '/workspace/scratch/34fef8e672bb/project1/tb'

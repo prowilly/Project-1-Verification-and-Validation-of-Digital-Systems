@@ -9,3 +9,9 @@ results.xml
 # Waveforms
 *.vcd
 *.fst
+
+# Local-only regression products (curated evidence/current is committed)
+coverage/generated/
+evidence/generated/
+evidence/current/**/fifo.sv
+.venv/

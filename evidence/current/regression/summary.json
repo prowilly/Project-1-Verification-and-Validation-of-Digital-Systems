@@ -1,0 +1,250 @@
+{
+  "base_commit": "5826bbda22fa500afa1d8b8721609a4efe6faa41",
+  "environment": {
+    "PyYAML": "6.0.3",
+    "cocotb": "1.9.2",
+    "cocotb-coverage": "1.2.0",
+    "dv-solve": "0.5.0",
+    "iverilog": "Icarus Verilog version 12.0 (stable) ()",
+    "pyboolector": "3.2.4.38488416565",
+    "python": "3.12.14",
+    "pyucis": "0.2.2",
+    "pyvsc": "1.1.0"
+  },
+  "repeat_identical": true,
+  "runs": [
+    {
+      "command": [
+        "make",
+        "-C",
+        "tb",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/baseline/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/baseline/results.xml"
+      ],
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/baseline"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "baseline",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 5
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701/results.xml",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "WIDTH=8",
+        "DEPTH=8",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 400,
+        "hit": 108,
+        "stimulus_sha256": "67d0635eb4ee4d097daaf8337db570b11961a8d21111cb5326dbb7fe3b921015",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "seed-4701",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-17/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-17/results.xml",
+        "SEED=17",
+        "N_CYCLES=5000",
+        "WIDTH=8",
+        "DEPTH=8",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 484,
+        "hit": 108,
+        "stimulus_sha256": "8e92b292cc4e791ba195ce38c810c9e3e130028781ee575496dbe8bd96e15ca2",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-17"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "seed-17",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4702/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4702/results.xml",
+        "SEED=4702",
+        "N_CYCLES=5000",
+        "WIDTH=8",
+        "DEPTH=8",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 425,
+        "hit": 108,
+        "stimulus_sha256": "ac4ac5ce570988157dd0c4371ac59620c197b819d499702f241517d89a35faa5",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4702"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "seed-4702",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701-repeat/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701-repeat/results.xml",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "WIDTH=8",
+        "DEPTH=8",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 400,
+        "hit": 108,
+        "stimulus_sha256": "67d0635eb4ee4d097daaf8337db570b11961a8d21111cb5326dbb7fe3b921015",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/seed-4701-repeat"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "seed-4701-repeat",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/results.xml",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "WIDTH=16",
+        "DEPTH=5",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 340,
+        "hit": 108,
+        "stimulus_sha256": "727e823fb38607041a8f798674befa25f537002ce2bbdc36a88cf498e42a8531",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "width16-depth5",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "command": [
+        "make",
+        "-C",
+        "crv",
+        "SIM=icarus",
+        "SIM_BUILD=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width8-depth4/sim_build",
+        "COCOTB_RESULTS_FILE=/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width8-depth4/results.xml",
+        "SEED=4701",
+        "N_CYCLES=5000",
+        "WIDTH=8",
+        "DEPTH=4",
+        "STIM=biased",
+        "RESET_DENOMINATOR=200",
+        "REQUIRE_CLOSURE=1"
+      ],
+      "coverage": {
+        "closed_at": 416,
+        "hit": 108,
+        "stimulus_sha256": "7c81b5f7f60c7b29e30f99cc59cb12f2372fce728e6ab269bd4da4d233cfd1f4",
+        "total": 108
+      },
+      "environment": {
+        "COVERAGE_DIR": "/workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width8-depth4"
+      },
+      "exit_code": 0,
+      "failed": 0,
+      "name": "width8-depth4",
+      "skipped": 0,
+      "status": "passed",
+      "tests": 1
+    }
+  ],
+  "source": {
+    "files": {
+      "coverage/fifo_coverage.py": "db232dfcf43577199598a8c3583207cb4a9ad1d0fcec6155585947fc2c520124",
+      "crv/Makefile": "9aa0b70c31fbbf33bcfe6733567d09c8bbfd39719254c98c4cf6db4992d82d3e",
+      "crv/test_fifo.py": "bde0c228258cc3a13f2daa17b5bbfb857a800ae05b9700a0f64605b3d56b4ce4",
+      "dut/fifo.sv": "6647fd89591c56687e31cb07364e88b05d72ff9ce3958fce2cb6ad950ffbd750",
+      "lib/models/fifo_model.py": "0974e1cb095f4bc587de068d9b21f3c4b62aceeeb753498535f5efe2adfb28c7",
+      "requirements.txt": "089c69f29dd4f966eda397e1dc3289b7a0560e27df79dcbf306b7c88072082f4",
+      "scripts/run_verification.py": "f774dd98b2ce9c37d09b9215ca50799d62822b026b5b8c41c8ff28e010a196be",
+      "tb/Makefile": "c24e0cef1d7947e72c42d60d7e4a46a2a261fa4af78dbdb0822fe37927949a65",
+      "tb/fifo_bench.py": "44ab141186022374331148ab5393bf2d69ec345924ba76bc1ba24fe3d3c3485c",
+      "tb/fifo_driver.py": "f551ae38051cbc74a257f27835cfae548ffeb188ce958790179a486b1bf745f0",
+      "tb/fifo_monitor.py": "bb147d4ba8b3afafae2cb4155d4dd28f93e85d35a7a15a9ad7044b4d2ce5b8ca",
+      "tb/fifo_scoreboard.py": "29fa9bf0a27860dd288509bf2797d3bdfe9bf3e0310e6dc24fe6aea22c0121b2",
+      "tb/fifo_types.py": "810b31e4642de78631a7aec1bd246be8be3d63e898b08e58936fdd37f21a822a",
+      "tb/mutants_released.yaml": "93de0339238b470bc23c302a3614ff008029e34937caea9aa1680116f8d35408",
+      "tb/test_fifo.py": "00cf2cc76d523e862e7ee5cb3a88d9a82ec4919ad397f687a0e414787f2d637c",
+      "tests/test_coverage_model.py": "d3fde819e3c69b6b47d12d33f09c6279de7bf9feb5cf5334f0b59e611ae2a0a1",
+      "tests/test_verification_tools.py": "3e0568fa57d1f656fc3f2abe12aec66a1441b2bed2b307c51911116b0968d365"
+    },
+    "sha256": "5351bff7374d0b2c614c479b728d1c2e1b5642a7b888c7ed8823ff9b6a2dce42"
+  }
+}

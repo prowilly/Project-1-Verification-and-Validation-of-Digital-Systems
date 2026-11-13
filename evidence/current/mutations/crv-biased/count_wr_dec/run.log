@@ -1,0 +1,38 @@
+make: Entering directory '/workspace/scratch/34fef8e672bb/project1/crv'
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/results.xml
+"make" -f Makefile /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/results.xml
+make[1]: Entering directory '/workspace/scratch/34fef8e672bb/project1/crv'
+mkdir -p /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/sim_build
+/workspace/scratch/34fef8e672bb/audit-bin/iverilog -o /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/sim_build/sim.vvp -D COCOTB_SIM=1 -s fifo -g2012 -Pfifo.WIDTH=8 -Pfifo.DEPTH=8 -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/sim_build/cmds.f  /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/fifo.sv
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/results.xml
+MODULE=test_fifo TESTCASE= TOPLEVEL=fifo TOPLEVEL_LANG=verilog \
+         /workspace/scratch/34fef8e672bb/audit-bin/vvp -M /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   /workspace/scratch/34fef8e672bb/project1/evidence/current/mutations/crv-biased/count_wr_dec/sim_build/sim.vvp  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1794599644
+     0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_crv_seeded_regression
+     0.00ns INFO     cocotb.regression                  running test_crv_seeded_regression (1/1)
+    31.00ns INFO     cocotb.regression                  test_crv_seeded_regression failed
+                                                        Traceback (most recent call last):
+                                                          File "/workspace/scratch/34fef8e672bb/project1/crv/test_fifo.py", line 236, in test_crv_seeded_regression
+                                                            observed = await checked_cycle(bench, FifoTransaction(wr, rd, data), label)
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                          File "/workspace/scratch/34fef8e672bb/project1/crv/test_fifo.py", line 199, in checked_cycle
+                                                            bench.scoreboard.check(observed, tx=tx, label=label)
+                                                          File "/workspace/scratch/34fef8e672bb/project1/tb/fifo_scoreboard.py", line 33, in check
+                                                            assert 0 <= observed.count <= self.model.depth, "out-of-range count: " + info
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                        AssertionError: out-of-range count: cycle=5, case=seed=4701 crv#0, tx=FifoTransaction(wr_en=1, rd_en=1, wr_data=31), expected_queue=[31], observed=FifoObservation(count=15, full=0, empty=0, rd_data=31, wr_en=1, rd_en=1, wr_data=31)
+    31.00ns INFO     cocotb.regression                  **********************************************************************************************
+                                                        ** TEST                                  STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **********************************************************************************************
+                                                        ** test_fifo.test_crv_seeded_regression   FAIL          31.00           0.02       1385.84  **
+                                                        **********************************************************************************************
+                                                        ** TESTS=1 PASS=0 FAIL=1 SKIP=0                         31.00           0.38         81.21  **
+                                                        **********************************************************************************************
+                                                        
+make[1]: Leaving directory '/workspace/scratch/34fef8e672bb/project1/crv'
+make: Leaving directory '/workspace/scratch/34fef8e672bb/project1/crv'

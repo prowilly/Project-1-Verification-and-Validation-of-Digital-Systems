@@ -7,12 +7,17 @@ class FifoMonitor:
     def __init__(self, dut):
         self.dut = dut
 
+    def _known(self, name):
+        value = getattr(self.dut, name).value
+        assert value.is_resolvable, f"Unresolved required FIFO output/input: {name}={value}"
+        return int(value)
+
     def read_pins(self):
-        count = int(self.dut.count.value)
-        full = int(self.dut.full.value)
-        empty = int(self.dut.empty.value)
+        count = self._known("count")
+        full = self._known("full")
+        empty = self._known("empty")
         # The written specification promises a valid FWFT head only if !empty.
-        head = int(self.dut.rd_data.value) if not empty else None
+        head = self._known("rd_data") if not empty else None
         return FifoObservation(
             count=count,
             full=full,

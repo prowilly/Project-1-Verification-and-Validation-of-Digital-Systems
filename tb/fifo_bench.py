@@ -1,6 +1,6 @@
 """Top-level layered FIFO environment shared with the CRV/coverage workstream.
 
-Stable interface for Teammate 2:
+Shared interface for directed and constrained-random tests:
     bench = await FifoBench.start(dut)
     before = bench.scoreboard.model.count  # pre-edge occupancy
     obs = await bench.apply(transaction, label="CRV")
@@ -68,7 +68,7 @@ class FifoBench:
         return after_edge
 
     async def apply(self, tx, label=""):
-        """Common entry point for the HW4 directed tests and the future pyvsc CRV."""
+        """Common entry point for the directed FIFO transactions."""
         tx = await self.driver.drive(tx)
         self.scoreboard.predict(tx)  # MUST precede rising edge.
         observed = await self.monitor.sample()

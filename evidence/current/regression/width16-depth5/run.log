@@ -1,0 +1,31 @@
+make: Entering directory '/workspace/scratch/34fef8e672bb/project1/crv'
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/results.xml
+"make" -f Makefile /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/results.xml
+make[1]: Entering directory '/workspace/scratch/34fef8e672bb/project1/crv'
+mkdir -p /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/sim_build
+/workspace/scratch/34fef8e672bb/audit-bin/iverilog -o /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/sim_build/sim.vvp -D COCOTB_SIM=1 -s fifo -g2012 -Pfifo.WIDTH=16 -Pfifo.DEPTH=5 -f /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/sim_build/cmds.f  /workspace/scratch/34fef8e672bb/project1/crv/../dut/fifo.sv
+rm -f /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/results.xml
+MODULE=test_fifo TESTCASE= TOPLEVEL=fifo TOPLEVEL_LANG=verilog \
+         /workspace/scratch/34fef8e672bb/audit-bin/vvp -M /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   /workspace/scratch/34fef8e672bb/project1/evidence/current/regression/width16-depth5/sim_build/sim.vvp  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:79   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.9.2 from /workspace/scratch/34fef8e672bb/.venv/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1794599725
+     0.00ns INFO     cocotb.regression                  pytest not found, install it to enable better AssertionError messages
+     0.00ns INFO     cocotb.regression                  Found test test_fifo.test_crv_seeded_regression
+     0.00ns INFO     cocotb.regression                  running test_crv_seeded_regression (1/1)
+ 50041.00ns INFO     cocotb.fifo                        CRV seed=4701 cycles=5000 fills=141 drains=140
+ 50041.00ns INFO     cocotb.fifo                        COV TOTAL seed=4701 100.00% (108/108)
+ 50041.00ns INFO     cocotb.fifo                        COV CLOSED_AT cycle=340; HOLES=[]
+ 50041.00ns INFO     cocotb.regression                  test_crv_seeded_regression passed
+ 50041.00ns INFO     cocotb.regression                  **********************************************************************************************
+                                                        ** TEST                                  STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **********************************************************************************************
+                                                        ** test_fifo.test_crv_seeded_regression   PASS       50041.00          51.30        975.36  **
+                                                        **********************************************************************************************
+                                                        ** TESTS=1 PASS=1 FAIL=0 SKIP=0                      50041.00          51.68        968.32  **
+                                                        **********************************************************************************************
+                                                        
+make[1]: Leaving directory '/workspace/scratch/34fef8e672bb/project1/crv'
+make: Leaving directory '/workspace/scratch/34fef8e672bb/project1/crv'

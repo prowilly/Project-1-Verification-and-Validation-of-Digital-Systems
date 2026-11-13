@@ -1,0 +1,8 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1794599659" />
+    <testcase name="test_crv_seeded_regression" classname="test_fifo" file="/workspace/scratch/34fef8e672bb/project1/crv/test_fifo.py" lineno="203" time="0.017427921295166016" sim_time_ns="31.001" ratio_time="1778.8122562040003">
+      <failure message="Test failed with RANDOM_SEED=1794599659" />
+    </testcase>
+  </testsuite>
+</testsuites>
